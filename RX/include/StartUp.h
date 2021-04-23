@@ -11,4 +11,6 @@ private:
 public:
     StartUp();
     ~StartUp();
+
+    void set_infrastructure();
 };
