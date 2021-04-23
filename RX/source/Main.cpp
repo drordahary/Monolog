@@ -1,8 +1,11 @@
 #include "../include/essential.h"
 #include "../include/StartUp.h"
 
+bool exiting = false;
+
 void finish(int signal)
 {
+    exiting = true;
     slog_info("Exited cleanly");
 }
 
@@ -19,7 +22,7 @@ int set_signal_handler()
     }
 
     slog_info("Successfully applied function to the signal handler");
-    
+
     return 1;
 }
 
@@ -34,6 +37,10 @@ int main()
         if (!success)
         {
             slog_warn("Cannot set signal handler");
+        }
+
+        while (!exiting)
+        {
         }
     }
 
