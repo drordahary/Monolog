@@ -3,6 +3,7 @@
 StartUp::StartUp()
 {
     settings.set_logger();
+    settings.set_redis();
     settings.fetch_configurations();
 }
 

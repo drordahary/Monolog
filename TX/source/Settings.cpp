@@ -2,8 +2,6 @@
 
 Settings::Settings()
 {
-    redis_handler.connect_to_redis();
-    redis_handler.select_database(REDIS_DB_ID);
 }
 
 Settings::~Settings()
@@ -30,6 +28,14 @@ void Settings::set_logger()
     slog_config_set(&slgCfg);
 
     slog_info("Successfully initialized the logger");
+}
+
+void Settings::set_redis()
+{
+    redis_handler.connect_to_redis();
+    redis_handler.select_database(REDIS_DB_ID);
+
+    slog_info("Connected to Redis database: %d", REDIS_DB_ID);
 }
 
 void Settings::fetch_configurations()
