@@ -1,7 +1,7 @@
 all:
 	mkdir -p bin
 	mkdir -p logs
-	/usr/bin/g++ source/Main.cpp -o bin/TX -lslog -pthread
+	/usr/bin/g++ source/Main.cpp source/RedisHandler.cpp source/ExceptionsHandler.cpp source/Settings.cpp source/StartUp.cpp  -o bin/TX -lslog -pthread -lhiredis
 
 clean:
 	$(RM) -r bin/TX
