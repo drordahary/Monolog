@@ -8,7 +8,6 @@
 class Group
 {
 private:
-    int channel_id;
     channel_configurations configurations;
 
     MetadataWorker *metadata_worker;
