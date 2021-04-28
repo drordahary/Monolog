@@ -1,11 +1,14 @@
 #include "../include/essential.h"
 #include "../include/StartUp.h"
 
+StartUp start_up;
 bool exiting = false;
 
 void finish(int signal)
 {
+    start_up.terminate_now();
     exiting = true;
+
     slog_info("Exited cleanly");
 }
 
@@ -30,7 +33,6 @@ int main()
 {
     try
     {
-        StartUp start_up;
         start_up.set_infrastructure();
 
         int success = set_signal_handler();
@@ -38,6 +40,8 @@ int main()
         {
             slog_warn("Cannot set signal handler");
         }
+
+        start_up.set_groups();
 
         while (!exiting)
         {

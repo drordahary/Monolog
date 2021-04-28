@@ -85,3 +85,8 @@ void Settings::organize_results(const std::vector<std::string> &results)
 
     channels.push_back(configurations);
 }
+
+std::vector<channel_configurations> &Settings::get_channels_configurations()
+{
+    return channels;
+}

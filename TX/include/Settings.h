@@ -31,4 +31,6 @@ public:
     void set_redis();
     void fetch_configurations();
     void organize_results(const std::vector<std::string> &results);
+
+    std::vector<channel_configurations> &get_channels_configurations();
 };
