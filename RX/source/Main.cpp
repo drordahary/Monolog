@@ -39,6 +39,9 @@ int main()
             slog_warn("Cannot set signal handler");
         }
 
+        start_up.set_ports();
+        start_up.set_groups();
+
         while (!exiting)
         {
         }
@@ -46,7 +49,10 @@ int main()
 
     catch (const std::string &exception)
     {
-        slog_fatal("%s", exception);
+        if (!exiting)
+        {
+            slog_fatal("%s", exception);
+        }
     }
 
     return EXIT_SUCCESS;

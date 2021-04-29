@@ -9,3 +9,18 @@ std::string ExceptionsHandler::bad_redis_reply()
 {
     return "Cannot read from Redis";
 }
+
+std::string ExceptionsHandler::bad_socket_creation()
+{
+    return "Cannot create socket";
+}
+
+std::string ExceptionsHandler::bad_bind()
+{
+    return "Bind failed";
+}
+
+std::string ExceptionsHandler::bad_select()
+{
+    return "Select failed";
+}
