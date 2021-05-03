@@ -2,26 +2,24 @@
 #include "../include/StartUp.h"
 
 bool exiting = false;
+struct sigaction sigbreak;
+sigset_t emptyset, blockset;
 
 void finish(int signal)
 {
     exiting = true;
-    slog_info("Exited cleanly");
 }
 
-int set_signal_handler()
+int install_signal_handler()
 {
-    struct sigaction sigbreak;
-    sigbreak.sa_handler = &finish;
-    sigemptyset(&sigbreak.sa_mask);
+    sigemptyset(&blockset);
+    sigaddset(&blockset, SIGINT);
+    sigprocmask(SIG_BLOCK, &blockset, NULL);
+
+    sigbreak.sa_handler = finish;
     sigbreak.sa_flags = 0;
-
-    if (sigaction(SIGINT, &sigbreak, NULL) != 0)
-    {
-        return 0;
-    }
-
-    slog_info("Successfully applied function to the signal handler");
+    sigemptyset(&sigbreak.sa_mask);
+    sigaction(SIGINT, &sigbreak, NULL);
 
     return 1;
 }
@@ -33,14 +31,18 @@ int main()
         StartUp start_up;
         start_up.set_infrastructure();
 
-        int success = set_signal_handler();
+        int success = install_signal_handler();
         if (!success)
         {
             slog_warn("Cannot set signal handler");
         }
 
+        start_up.set_signal_handler(sigbreak);
+
         start_up.set_ports();
         start_up.set_groups();
+
+        sigprocmask(SIG_SETMASK, &blockset, NULL);
 
         while (!exiting)
         {
@@ -51,7 +53,7 @@ int main()
     {
         if (!exiting)
         {
-            slog_fatal("%s", exception);
+            slog_fatal("%s", exception.c_str());
         }
     }
 

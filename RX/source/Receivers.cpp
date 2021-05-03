@@ -22,6 +22,11 @@ Receivers::~Receivers()
     data_sockets.clear();
 }
 
+void Receivers::set_signal_handler(struct sigaction &sigbreak)
+{
+    this->sigbreak = sigbreak;
+}
+
 void Receivers::set_sockets(const int &metadata_port, const std::vector<int> &data_ports)
 {
     set_metadata_socket(metadata_port);
@@ -54,11 +59,6 @@ socket_settings Receivers::set_single_socket(const int &port)
         throw(ExceptionsHandler::bad_bind());
     }
 
-    single_socket.buffer_size = configurations.buffer_size;
-    single_socket.buffer.resize(single_socket.buffer_size);
-
-    std::fill(single_socket.buffer.begin(), single_socket.buffer.end(), '\0');
-
     slog_info("Opened socket on port number: %d", port);
     return single_socket;
 }
@@ -86,15 +86,23 @@ void Receivers::set_data_sockets(const std::vector<int> &data_ports)
 
 void Receivers::start_receiving()
 {
+    sigset_t emptyset;
     int readable_count = 0;
+
     while (true)
     {
         copy = sockets;
-        readable_count = select(max_fd + 1, &copy, nullptr, nullptr, nullptr);
+        sigemptyset(&emptyset);
+
+        readable_count = pselect(max_fd + 1, &copy, nullptr, nullptr, nullptr, &sigbreak.sa_mask);
 
         if (readable_count < 0)
         {
-            throw(ExceptionsHandler::bad_select());
+            if (errno != EINTR)
+            {
+                throw(ExceptionsHandler::bad_select());
+            }
+            return;
         }
     }
 }
@@ -104,6 +112,7 @@ void Receivers::handle_readables()
     if (FD_ISSET(metadata_socket.fd, &copy))
     {
         handle_metadata();
+        std::fill(buffer.begin(), buffer.end(), '\0');
     }
 
     for (int i = 0; i < data_sockets.size(); i++)
@@ -117,7 +126,7 @@ void Receivers::handle_readables()
 
 void Receivers::handle_metadata()
 {
-    metadata_socket.receive_len = recvfrom(metadata_socket.fd, &metadata_socket.buffer[0], metadata_socket.buffer_size, 0,
+    metadata_socket.receive_len = recvfrom(metadata_socket.fd, &buffer[0], buffer_size, 0,
                                            (struct sockaddr *)&metadata_socket.client_address, &metadata_socket.socket_len);
 
     if (metadata_socket.receive_len > 0)
@@ -132,7 +141,7 @@ void Receivers::handle_metadata()
 
 void Receivers::handle_data(socket_settings &data_socket)
 {
-    data_socket.receive_len = recvfrom(data_socket.fd, &data_socket.buffer[0], data_socket.buffer_size, 0,
+    data_socket.receive_len = recvfrom(data_socket.fd, &buffer[0], buffer_size, 0,
                                        (struct sockaddr *)&data_socket.client_address, &data_socket.socket_len);
 
     if (data_socket.receive_len > 0)

@@ -10,8 +10,6 @@ typedef struct socket_settings
     struct sockaddr_in client_address;
     socklen_t socket_len;
     int receive_len;
-    int buffer_size;
-    std::vector<unsigned char> buffer;
 
 } socket_settings;
 
@@ -22,15 +20,21 @@ private:
     std::vector<socket_settings> data_sockets;
     int max_fd;
 
+    int buffer_size;
+    std::vector<unsigned char> buffer;
+
     fd_set sockets;
     fd_set copy;
 
     channel_configurations configurations;
 
+    struct sigaction sigbreak;
+
 public:
     Receivers(channel_configurations configurations);
     ~Receivers();
 
+    void set_signal_handler(struct sigaction &sigbreak);
     void set_sockets(const int &metadata_port, const std::vector<int> &data_ports);
     socket_settings set_single_socket(const int &port);
     void set_metadata_socket(const int &metadata_port);

@@ -36,7 +36,13 @@ void StartUp::set_groups()
     for (channel_configurations configurations : channels_configurations)
     {
         groups.push_back(GroupFactory::make_group(configurations, current_channel_id));
+        groups.back()->set_group_signal_handler(sigbreak);
         groups.back()->set_receivers(ports.get_metadata_port(current_channel_id), ports.get_data_ports(current_channel_id));
         current_channel_id++;
     }
+}
+
+int StartUp::set_signal_handler(struct sigaction &sigbreak)
+{
+    this->sigbreak = sigbreak;
 }

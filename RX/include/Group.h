@@ -10,10 +10,13 @@ private:
     int channel_id;
     int metadata_port;
     std::vector<int> data_ports;
+    boost::thread *receivers_thread;
+    struct sigaction sigbreak;
 
 public:
     Group(channel_configurations configurations, int channel_id);
     ~Group();
 
     void set_receivers(const int &metadata_port, const std::vector<int> &data_ports);
+    void set_group_signal_handler(struct sigaction &sigbreak);
 };

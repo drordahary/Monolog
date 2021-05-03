@@ -13,6 +13,8 @@ private:
     std::vector<Group *> groups;
     Ports ports;
 
+    struct sigaction sigbreak;
+
 public:
     StartUp();
     ~StartUp();
@@ -20,4 +22,6 @@ public:
     void set_infrastructure();
     void set_ports();
     void set_groups();
+
+    int set_signal_handler(struct sigaction &sigbreak);
 };
