@@ -33,13 +33,10 @@ private:
     DataWorkerPool *data_pool;
     MetadataWorkerPool *metadata_pool;
 
-    struct sigaction sigbreak;
-
 public:
     Receivers(channel_configurations configurations);
     ~Receivers();
-
-    void set_signal_handler(struct sigaction &sigbreak);
+    
     void set_pools(DataWorkerPool *data_pool, MetadataWorkerPool *metadata_pool);
     void set_sockets(const int &metadata_port, const std::vector<int> &data_ports);
     socket_settings set_single_socket(const int &port);

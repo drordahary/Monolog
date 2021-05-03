@@ -42,8 +42,6 @@ int main()
             slog_warn("Cannot set signal handler");
         }
 
-        start_up.set_signal_handler(sigbreak);
-
         start_up.set_ports();
         start_up.set_pools();
         start_up.set_groups();

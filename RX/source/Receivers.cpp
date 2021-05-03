@@ -22,11 +22,6 @@ Receivers::~Receivers()
     data_sockets.clear();
 }
 
-void Receivers::set_signal_handler(struct sigaction &sigbreak)
-{
-    this->sigbreak = sigbreak;
-}
-
 void Receivers::set_pools(DataWorkerPool *data_pool, MetadataWorkerPool *metadata_pool)
 {
     this->data_pool = data_pool;
@@ -100,7 +95,7 @@ void Receivers::start_receiving()
         copy = sockets;
         sigemptyset(&emptyset);
 
-        readable_count = pselect(max_fd + 1, &copy, nullptr, nullptr, nullptr, &sigbreak.sa_mask);
+        readable_count = pselect(max_fd + 1, &copy, nullptr, nullptr, nullptr, &emptyset);
 
         if (readable_count < 0)
         {

@@ -23,8 +23,6 @@ private:
     DataWorkerPool *data_pool;
     MetadataWorkerPool *metadata_pool;
 
-    struct sigaction sigbreak;
-
 public:
     StartUp();
     ~StartUp();
@@ -35,6 +33,4 @@ public:
     void set_groups();
 
     void terminate_now();
-
-    void set_signal_handler(struct sigaction &sigbreak);
 };
