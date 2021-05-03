@@ -5,6 +5,14 @@
 #include "Group.h"
 #include "GroupFactory.h"
 #include "Ports.h"
+#include "DataWorkerPool.h"
+#include "MetadataWorkerPool.h"
+
+namespace pool_settings
+{
+    const int data_pool_size = 20;
+    const int metadata_pool_size = 5;
+}
 
 class StartUp
 {
@@ -12,6 +20,8 @@ private:
     Settings settings;
     std::vector<Group *> groups;
     Ports ports;
+    DataWorkerPool *data_pool;
+    MetadataWorkerPool *metadata_pool;
 
     struct sigaction sigbreak;
 
@@ -21,7 +31,10 @@ public:
 
     void set_infrastructure();
     void set_ports();
+    void set_pools();
     void set_groups();
 
-    int set_signal_handler(struct sigaction &sigbreak);
+    void terminate_now();
+
+    void set_signal_handler(struct sigaction &sigbreak);
 };

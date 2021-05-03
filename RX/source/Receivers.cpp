@@ -27,6 +27,12 @@ void Receivers::set_signal_handler(struct sigaction &sigbreak)
     this->sigbreak = sigbreak;
 }
 
+void Receivers::set_pools(DataWorkerPool *data_pool, MetadataWorkerPool *metadata_pool)
+{
+    this->data_pool = data_pool;
+    this->metadata_pool = metadata_pool;
+}
+
 void Receivers::set_sockets(const int &metadata_port, const std::vector<int> &data_ports)
 {
     set_metadata_socket(metadata_port);

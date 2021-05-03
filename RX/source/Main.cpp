@@ -1,12 +1,15 @@
 #include "../include/essential.h"
 #include "../include/StartUp.h"
 
+StartUp start_up;
+
 bool exiting = false;
 struct sigaction sigbreak;
 sigset_t emptyset, blockset;
 
 void finish(int signal)
 {
+    start_up.terminate_now();
     exiting = true;
 }
 
@@ -19,8 +22,11 @@ int install_signal_handler()
     sigbreak.sa_handler = finish;
     sigbreak.sa_flags = 0;
     sigemptyset(&sigbreak.sa_mask);
-    sigaction(SIGINT, &sigbreak, NULL);
 
+    if (sigaction(SIGINT, &sigbreak, NULL) != 0)
+    {
+        return 0;
+    }
     return 1;
 }
 
@@ -28,7 +34,6 @@ int main()
 {
     try
     {
-        StartUp start_up;
         start_up.set_infrastructure();
 
         int success = install_signal_handler();
@@ -40,6 +45,7 @@ int main()
         start_up.set_signal_handler(sigbreak);
 
         start_up.set_ports();
+        start_up.set_pools();
         start_up.set_groups();
 
         sigprocmask(SIG_SETMASK, &blockset, NULL);

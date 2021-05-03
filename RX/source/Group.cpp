@@ -22,3 +22,8 @@ void Group::set_group_signal_handler(struct sigaction &sigbreak)
 {
     this->sigbreak = sigbreak;
 }
+
+void Group::set_pools(DataWorkerPool *data_pool, MetadataWorkerPool *metadata_pool)
+{
+    receivers.set_pools(data_pool, metadata_pool);
+}
