@@ -37,7 +37,7 @@ int RedisHandler::get_channels_count()
     query = "get channelsCount";
     reply = (redisReply *)redisCommand(context, query.c_str());
 
-    if (!this->reply || this->context->err || this->reply->type != REDIS_REPLY_STRING)
+    if (!reply || context->err || reply->type != REDIS_REPLY_STRING)
     {
         throw(ExceptionsHandler::bad_redis_reply());
     }
