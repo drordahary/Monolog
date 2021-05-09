@@ -31,6 +31,14 @@ void StartUp::set_groups()
     }
 }
 
+void StartUp::initiate_transmitters()
+{
+    for (Group *group : groups)
+    {
+        group->start_transmitting();
+    }
+}
+
 void StartUp::terminate_now()
 {
     for (Group *group : groups)

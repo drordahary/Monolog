@@ -1,7 +1,7 @@
 all:
 	mkdir -p bin
 	mkdir -p logs
-	/usr/bin/g++ source/Main.cpp source/RedisHandler.cpp source/ExceptionsHandler.cpp source/Group.cpp source/DataWorker.cpp source/MetadataWorker.cpp source/DataWorkerPool.cpp source/GroupFactory.cpp source/Settings.cpp source/StartUp.cpp  -o bin/TX -lslog -pthread -lhiredis -lboost_system -lboost_thread
+	/usr/bin/g++ source/Main.cpp source/RedisHandler.cpp source/ExceptionsHandler.cpp source/Group.cpp source/DataWorker.cpp source/MetadataWorker.cpp source/DataWorkerPool.cpp source/GroupFactory.cpp source/Settings.cpp source/StartUp.cpp source/DirectoryReader.cpp -o bin/TX -lslog -pthread -lhiredis -lboost_system -lboost_thread
 
 clean:
 	$(RM) -r bin/TX

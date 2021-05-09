@@ -18,5 +18,7 @@ public:
     void set_infrastructure();
     void set_groups();
 
+    void initiate_transmitters();
+
     void terminate_now();
 };

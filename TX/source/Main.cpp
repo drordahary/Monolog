@@ -42,6 +42,7 @@ int main()
         }
 
         start_up.set_groups();
+        start_up.initiate_transmitters();
 
         while (!exiting)
         {

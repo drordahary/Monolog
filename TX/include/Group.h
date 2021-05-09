@@ -20,5 +20,6 @@ public:
     void set_all_workers();
     void set_metadata_worker();
     void set_data_pool();
+    void start_transmitting();
     void terminate_pool();
 };

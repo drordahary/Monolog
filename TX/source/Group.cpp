@@ -28,6 +28,12 @@ void Group::set_data_pool()
     data_worker_pool->set_workers(configurations.ports_per_channel, configurations);
 }
 
+void Group::start_transmitting()
+{
+    metadata_worker->enable_pool_usage(data_worker_pool);
+    metadata_worker->start_working();
+}
+
 void Group::terminate_pool()
 {
     data_worker_pool->terminate_pool();
