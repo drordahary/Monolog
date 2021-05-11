@@ -2,3 +2,5 @@ TX/bin/
 TX/logs/
 RX/bin/
 RX/logs/
+TX/staging/
+TX/archive/
