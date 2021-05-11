@@ -18,5 +18,7 @@ public:
     bool is_dir(struct dirent *entry);
     bool is_dot(const std::string &name);
 
+    void extract_relative_paths(std::string channel_dir);
+
     std::vector<std::string> &get_paths();
 };
