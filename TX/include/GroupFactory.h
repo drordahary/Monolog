@@ -7,5 +7,5 @@
 class GroupFactory
 {
 public:
-    static Group *make_group(channel_configurations configurations);
+    static Group *make_group(channel_configurations configurations, int channel_id);
 };

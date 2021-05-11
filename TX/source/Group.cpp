@@ -1,8 +1,9 @@
 #include "../include/Group.h"
 
-Group::Group(channel_configurations configurations)
+Group::Group(channel_configurations configurations, int channel_id)
 {
     this->configurations = configurations;
+    this->channel_id = channel_id;
 }
 
 Group::~Group()
@@ -19,7 +20,7 @@ void Group::set_all_workers()
 
 void Group::set_metadata_worker()
 {
-    metadata_worker = new MetadataWorker(configurations);
+    metadata_worker = new MetadataWorker(configurations, channel_id);
 }
 
 void Group::set_data_pool()

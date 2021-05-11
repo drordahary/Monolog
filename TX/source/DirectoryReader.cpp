@@ -50,7 +50,6 @@ void DirectoryReader::extract_relative_paths(std::string channel_dir)
     for (std::string &path : paths)
     {
         path = path.substr(position);
-        slog_trace("%s", path.c_str());
     }
 }
 

@@ -8,13 +8,14 @@
 class Group
 {
 private:
+    int channel_id;
     channel_configurations configurations;
 
     MetadataWorker *metadata_worker;
     DataWorkerPool *data_worker_pool;
 
 public:
-    Group(channel_configurations configurations);
+    Group(channel_configurations configurations, int channel_id);
     ~Group();
 
     void set_all_workers();

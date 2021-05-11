@@ -63,3 +63,18 @@ std::string RedisHandler::get_configuration(const int &channel_id, const std::st
 
     return configuration;
 }
+
+void RedisHandler::save_metadata(std::string &key, std::pair<std::string, std::string> &field)
+{
+    query = "hmset channelID:" + key;
+    query += " fileID:" + field.first + " " + field.second;
+
+    reply = (redisReply *)redisCommand(context, query.c_str());
+
+    if (!reply || context->err)
+    {
+        throw(ExceptionsHandler::bad_redis_reply());
+    }
+
+    freeReplyObject(reply);
+}

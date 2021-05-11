@@ -23,11 +23,13 @@ void StartUp::set_groups()
 {
     std::vector<channel_configurations> channels_configurations;
     channels_configurations = settings.get_channels_configurations();
+    int channel_id = 0;
 
     for (channel_configurations configurations : channels_configurations)
     {
-        groups.push_back(GroupFactory::make_group(configurations));
+        groups.push_back(GroupFactory::make_group(configurations, channel_id));
         groups.back()->set_all_workers();
+        channel_id++;
     }
 }
 
