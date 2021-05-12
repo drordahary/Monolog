@@ -1,7 +1,5 @@
 #include "../include/DirectoryOrganizer.h"
 
-// ../staging/Incoming1/some_files/inside_dir/
-
 void DirectoryOrganizer::produce_structure(std::string &path)
 {
     std::string new_path = extract_directory_structure(path);
