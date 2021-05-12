@@ -18,12 +18,12 @@ void DirectoryReader::iterate_channel_dir(std::string current_dir)
     {
         if (is_dir(entry))
         {
-            iterate_channel_dir(current_dir + "/" + entry->d_name + "/");
+            iterate_channel_dir(current_dir + entry->d_name + "/");
         }
 
         else if (!is_dot(entry->d_name))
         {
-            paths.push_back(current_dir + "/" + entry->d_name);
+            paths.push_back(current_dir + entry->d_name);
         }
     }
 
@@ -45,7 +45,7 @@ bool DirectoryReader::is_dot(const std::string &name)
 void DirectoryReader::extract_relative_paths(std::string channel_dir)
 {
     channel_dir = channel_dir.substr(0, channel_dir.length() - 1);
-    int position = channel_dir.find_last_of('/') + 1;
+    size_t position = channel_dir.find_last_of('/') + 1;
 
     for (std::string &path : paths)
     {

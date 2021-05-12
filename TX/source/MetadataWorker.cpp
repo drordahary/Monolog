@@ -27,10 +27,16 @@ void MetadataWorker::start_working()
 
     int file_id = 0;
     int file_size = 1000;
+    std::string new_path = STAGING_DIR;
 
     for (std::string &path : paths)
     {
         save_metadata_to_redis(file_id, path, file_size);
+
+        new_path += path;
+        DirectoryOrganizer::produce_structure(new_path);
+
+        new_path = STAGING_DIR;
         file_id++;
     }
 }

@@ -8,8 +8,13 @@
 #include <boost/asio/io_service.hpp>
 #include <boost/bind.hpp>
 #include <boost/thread/thread.hpp>
+#include <boost/filesystem.hpp>
+#include <boost/algorithm/string/find.hpp>
 #include <thread>
 #include <signal.h>
 #include <slog.h>
 #include <hiredis/hiredis.h>
 #include "ExceptionsHandler.h"
+
+#define STAGING_DIR "../staging/"
+#define ARCHIVE_DIR "../archive/"

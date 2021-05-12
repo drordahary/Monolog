@@ -5,6 +5,7 @@
 #include "RedisHandler.h"
 #include "DataWorkerPool.h"
 #include "DirectoryReader.h"
+#include "DirectoryOrganizer.h"
 
 #define REDIS_TX_DB 0
 
