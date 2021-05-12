@@ -25,6 +25,11 @@ void DirectoryReader::iterate_channel_dir(std::string current_dir)
         {
             paths.push_back(current_dir + entry->d_name);
         }
+
+        else
+        {
+            paths.push_back(current_dir);
+        }
     }
 
     closedir(dir);
