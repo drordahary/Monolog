@@ -46,8 +46,6 @@ int main()
         start_up.set_pools();
         start_up.set_groups();
 
-        sigprocmask(SIG_SETMASK, &blockset, NULL);
-
         while (!exiting)
         {
         }
