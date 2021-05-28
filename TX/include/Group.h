@@ -14,6 +14,8 @@ private:
     MetadataWorker *metadata_worker;
     DataWorkerPool *data_worker_pool;
 
+    boost::thread *metadata_thread;
+
 public:
     Group(channel_configurations configurations, int channel_id);
     ~Group();

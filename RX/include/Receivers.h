@@ -33,6 +33,8 @@ private:
     DataWorkerPool *data_pool;
     MetadataWorkerPool *metadata_pool;
 
+    int pfd[2];
+
 public:
     Receivers(channel_configurations configurations);
     ~Receivers();
@@ -48,4 +50,7 @@ public:
 
     void handle_metadata();
     void handle_data(socket_settings &data_socket);
+
+    void set_pipe();
+    void self_pipe();
 };

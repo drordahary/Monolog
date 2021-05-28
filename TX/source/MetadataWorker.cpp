@@ -20,23 +20,49 @@ void MetadataWorker::enable_pool_usage(DataWorkerPool *data_pool)
 void MetadataWorker::start_working()
 {
     std::string absolute_path = configurations.channel_directory;
-    dir_reader.iterate_channel_dir(absolute_path);
 
-    dir_reader.extract_relative_paths(absolute_path);
-    std::vector<std::string> paths = dir_reader.get_paths();
+    while (!exiting)
+    {
+        dir_reader.iterate_channel_dir(absolute_path);
+        fixed_paths = dir_reader.get_paths();
 
+        dir_reader.extract_relative_paths(absolute_path);
+        paths = dir_reader.get_paths();
+
+        handle_paths();
+
+        paths.clear();
+        fixed_paths.clear();
+        dir_reader.clear_paths();
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    }
+}
+
+void MetadataWorker::handle_paths()
+{
     int file_id = 0;
     int file_size = 1000;
     std::string new_path = STAGING_DIR;
+    std::string move_to;
+
+    auto fixed_paths_it = fixed_paths.begin();
 
     for (std::string &path : paths)
     {
-        save_metadata_to_redis(file_id, path, file_size);
-
         new_path += path;
         DirectoryOrganizer::produce_structure(new_path);
 
+        if (path[path.length() - 1] != '/')
+        {
+            save_metadata_to_redis(file_id, path, file_size);
+
+            move_to = new_path + dir_reader.extract_file_name(path);
+            FileHandler::move_file(*fixed_paths_it, move_to);
+        }
+
         new_path = STAGING_DIR;
+        fixed_paths_it++;
         file_id++;
     }
 }

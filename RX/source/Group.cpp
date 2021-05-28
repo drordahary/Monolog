@@ -13,6 +13,7 @@ Group::~Group()
 
 void Group::set_receivers(const int &metadata_port, const std::vector<int> &data_ports)
 {
+    receivers.set_pipe();
     receivers.set_sockets(metadata_port, data_ports);
     receivers_thread = new boost::thread(boost::bind(&Receivers::start_receiving, &receivers));
 }
@@ -20,4 +21,9 @@ void Group::set_receivers(const int &metadata_port, const std::vector<int> &data
 void Group::set_pools(DataWorkerPool *data_pool, MetadataWorkerPool *metadata_pool)
 {
     receivers.set_pools(data_pool, metadata_pool);
+}
+
+void Group::terminate_receivers()
+{
+    receivers.self_pipe();
 }

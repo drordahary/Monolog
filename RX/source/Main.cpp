@@ -2,10 +2,7 @@
 #include "../include/StartUp.h"
 
 StartUp start_up;
-
-bool exiting = false;
-struct sigaction sigbreak;
-sigset_t emptyset, blockset;
+bool exiting;
 
 void finish(int signal)
 {
@@ -15,13 +12,10 @@ void finish(int signal)
 
 int install_signal_handler()
 {
-    sigemptyset(&blockset);
-    sigaddset(&blockset, SIGINT);
-    sigprocmask(SIG_BLOCK, &blockset, NULL);
-
-    sigbreak.sa_handler = finish;
-    sigbreak.sa_flags = 0;
+    struct sigaction sigbreak;
+    sigbreak.sa_handler = &finish;
     sigemptyset(&sigbreak.sa_mask);
+    sigbreak.sa_flags = 0;
 
     if (sigaction(SIGINT, &sigbreak, NULL) != 0)
     {
@@ -34,6 +28,7 @@ int main()
 {
     try
     {
+        exiting = false;
         start_up.set_infrastructure();
 
         int success = install_signal_handler();
@@ -49,6 +44,8 @@ int main()
         while (!exiting)
         {
         }
+
+        slog_info("Exited cleanly");
     }
 
     catch (const std::string &exception)

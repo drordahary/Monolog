@@ -56,6 +56,11 @@ void StartUp::set_groups()
 
 void StartUp::terminate_now()
 {
+    for (Group *group : groups)
+    {
+        group->terminate_receivers();
+    }
+
     data_pool->terminate_pool();
     metadata_pool->terminate_pool();
 }

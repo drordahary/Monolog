@@ -10,4 +10,5 @@ public:
     static std::string bad_socket_creation();
     static std::string bad_bind();
     static std::string bad_select();
+    static std::string bad_pipe();
 };

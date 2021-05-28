@@ -2,7 +2,7 @@
 #include "../include/StartUp.h"
 
 StartUp start_up;
-bool exiting = false;
+bool exiting;
 
 void finish(int signal)
 {
@@ -14,6 +14,8 @@ void finish(int signal)
 
 int set_signal_handler()
 {
+    exiting = false;
+
     struct sigaction sigbreak;
     sigbreak.sa_handler = &finish;
     sigemptyset(&sigbreak.sa_mask);

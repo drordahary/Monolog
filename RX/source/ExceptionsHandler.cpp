@@ -24,3 +24,8 @@ std::string ExceptionsHandler::bad_select()
 {
     return "Select failed";
 }
+
+std::string ExceptionsHandler::bad_pipe()
+{
+    return "Pipe failed";
+}

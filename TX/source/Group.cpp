@@ -8,6 +8,8 @@ Group::Group(channel_configurations configurations, int channel_id)
 
 Group::~Group()
 {
+    metadata_thread->join();
+    delete metadata_thread;
     delete metadata_worker;
     delete data_worker_pool;
 }
@@ -32,7 +34,8 @@ void Group::set_data_pool()
 void Group::start_transmitting()
 {
     metadata_worker->enable_pool_usage(data_worker_pool);
-    metadata_worker->start_working();
+    metadata_thread = new boost::thread(boost::bind(&MetadataWorker::start_working, metadata_worker));
+    
 }
 
 void Group::terminate_pool()

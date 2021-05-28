@@ -21,12 +21,12 @@ void DirectoryReader::iterate_channel_dir(std::string current_dir)
             iterate_channel_dir(current_dir + entry->d_name + "/");
         }
 
-        else if (!is_dot(entry->d_name))
+        else if (!is_dot(entry->d_name) && (entry->d_type == IS_FILE))
         {
             paths.push_back(current_dir + entry->d_name);
         }
 
-        else
+        else if (boost::filesystem::is_empty(current_dir))
         {
             paths.push_back(current_dir);
         }
@@ -58,7 +58,17 @@ void DirectoryReader::extract_relative_paths(std::string channel_dir)
     }
 }
 
+std::string DirectoryReader::extract_file_name(const std::string &path)
+{
+    return path.substr(path.find_last_of('/') + 1);
+}
+
 std::vector<std::string> &DirectoryReader::get_paths()
 {
     return paths;
+}
+
+void DirectoryReader::clear_paths()
+{
+    paths.clear();
 }

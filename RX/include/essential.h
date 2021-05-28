@@ -18,3 +18,5 @@
 #include <slog.h>
 #include <hiredis/hiredis.h>
 #include "ExceptionsHandler.h"
+
+extern bool exiting;

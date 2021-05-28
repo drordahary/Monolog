@@ -18,4 +18,6 @@ public:
 
     void set_receivers(const int &metadata_port, const std::vector<int> &data_ports);
     void set_pools(DataWorkerPool *data_pool, MetadataWorkerPool *metadata_pool);
+
+    void terminate_receivers();
 };

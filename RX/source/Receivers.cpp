@@ -68,7 +68,11 @@ void Receivers::set_metadata_socket(const int &metadata_port)
 {
     metadata_socket = set_single_socket(metadata_port);
     FD_SET(metadata_socket.fd, &sockets);
-    max_fd = metadata_socket.fd;
+
+    if (metadata_socket.fd > max_fd)
+    {
+        max_fd = metadata_socket.fd;
+    }
 }
 
 void Receivers::set_data_sockets(const std::vector<int> &data_ports)
@@ -87,15 +91,17 @@ void Receivers::set_data_sockets(const std::vector<int> &data_ports)
 
 void Receivers::start_receiving()
 {
-    sigset_t emptyset;
     int readable_count = 0;
 
-    while (true)
+    while (!exiting)
     {
         copy = sockets;
-        sigemptyset(&emptyset);
+        readable_count = select(max_fd + 1, &copy, nullptr, nullptr, nullptr);
 
-        readable_count = pselect(max_fd + 1, &copy, nullptr, nullptr, nullptr, &emptyset);
+        if (FD_ISSET(pfd[0], &copy))
+        {
+            return;
+        }
 
         if (readable_count < 0)
         {
@@ -133,11 +139,6 @@ void Receivers::handle_metadata()
     if (metadata_socket.receive_len > 0)
     {
     }
-
-    else
-    {
-        FD_CLR(metadata_socket.fd, &sockets);
-    }
 }
 
 void Receivers::handle_data(socket_settings &data_socket)
@@ -148,18 +149,20 @@ void Receivers::handle_data(socket_settings &data_socket)
     if (data_socket.receive_len > 0)
     {
     }
+}
 
-    else
+void Receivers::set_pipe()
+{
+    if (pipe(pfd) == -1)
     {
-        FD_CLR(data_socket.fd, &sockets);
-
-        for (auto it = data_sockets.begin(); it != data_sockets.end(); it++)
-        {
-            if (it->fd == data_socket.fd)
-            {
-                data_sockets.erase(it);
-                return;
-            }
-        }
+        throw(ExceptionsHandler::bad_pipe());
     }
+
+    FD_SET(pfd[0], &sockets);
+    max_fd = pfd[0];
+}
+
+void Receivers::self_pipe()
+{
+    write(pfd[1], "X", 1);
 }

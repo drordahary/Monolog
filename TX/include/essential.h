@@ -15,6 +15,10 @@
 #include <slog.h>
 #include <hiredis/hiredis.h>
 #include "ExceptionsHandler.h"
+#include "DirectoryOrganizer.h"
+#include "FileHandler.h"
 
 #define STAGING_DIR "../staging/"
 #define ARCHIVE_DIR "../archive/"
+
+extern bool exiting;
