@@ -53,7 +53,7 @@ int main()
 
     catch (const std::string &exception)
     {
-        slog_fatal("%s", exception);
+        slog_fatal("%s", exception.c_str());
     }
 
     return EXIT_SUCCESS;

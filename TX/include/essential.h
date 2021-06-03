@@ -9,6 +9,8 @@
 #include <boost/bind.hpp>
 #include <boost/thread/thread.hpp>
 #include <boost/filesystem.hpp>
+#include <boost/asio/thread_pool.hpp>
+#include <boost/asio/post.hpp>
 #include <boost/algorithm/string/find.hpp>
 #include <thread>
 #include <signal.h>

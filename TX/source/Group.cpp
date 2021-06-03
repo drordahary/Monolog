@@ -27,7 +27,7 @@ void Group::set_metadata_worker()
 
 void Group::set_data_pool()
 {
-    data_worker_pool = new DataWorkerPool();
+    data_worker_pool = new DataWorkerPool(configurations.ports_per_channel);
     data_worker_pool->set_workers(configurations.ports_per_channel, configurations);
 }
 

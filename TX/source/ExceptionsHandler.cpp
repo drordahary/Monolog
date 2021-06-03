@@ -14,3 +14,8 @@ std::string ExceptionsHandler::bad_file_move()
 {
     return "Cannot move file";
 }
+
+std::string ExceptionsHandler::bad_stream_open()
+{
+    return "Cannot open stream";
+}

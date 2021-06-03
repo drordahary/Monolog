@@ -42,7 +42,7 @@ void MetadataWorker::start_working()
 void MetadataWorker::handle_paths()
 {
     int file_id = 0;
-    int file_size = 1000;
+    int file_size;
     std::string new_path = STAGING_DIR;
     std::string move_to;
 
@@ -55,16 +55,26 @@ void MetadataWorker::handle_paths()
 
         if (path[path.length() - 1] != '/')
         {
+            file_size = get_file_size(*fixed_paths_it);
             save_metadata_to_redis(file_id, path, file_size);
 
-            move_to = new_path + dir_reader.extract_file_name(path);
+            move_to = new_path;
             FileHandler::move_file(*fixed_paths_it, move_to);
+
+            data_pool->add_job(move_to);
         }
 
         new_path = STAGING_DIR;
         fixed_paths_it++;
         file_id++;
     }
+}
+
+int MetadataWorker::get_file_size(const std::string &path)
+{
+    FileStream file;
+    file.set_file(path, 0);
+    return file.get_size();
 }
 
 void MetadataWorker::save_metadata_to_redis(int &file_id, std::string &path, int &file_size)

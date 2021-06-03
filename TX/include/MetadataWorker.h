@@ -28,6 +28,7 @@ public:
     void start_working();
 
     void handle_paths();
+    int get_file_size(const std::string &path);
 
     void save_metadata_to_redis(int &file_id, std::string &path, int &file_size);
 };
