@@ -60,7 +60,7 @@ void MetadataWorker::handle_paths()
             save_metadata_to_redis(file_id, path, file_size);
 
             organize_metadata(path, file_size);
-            transmitt_packet();
+            transmit_packet();
 
             move_to = new_path;
             FileHandler::move_file(*fixed_paths_it, move_to);

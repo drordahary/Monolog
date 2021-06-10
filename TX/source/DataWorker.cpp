@@ -25,7 +25,7 @@ void DataWorker::start_transmitting(const std::string &file_path)
         data = file.read_file(amount_to_read);
 
         organize_data(data);
-        transmitt_packet();
+        transmit_packet();
 
         completed += amount_to_read;
     }

@@ -32,5 +32,5 @@ public:
     virtual ~Transmitter();
 
     void set_socket();
-    void transmitt_packet();
+    void transmit_packet();
 };

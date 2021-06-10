@@ -35,7 +35,7 @@ void Transmitter::set_socket()
     slog_info("Opened socket on port: %d", configurations.port);
 }
 
-void Transmitter::transmitt_packet()
+void Transmitter::transmit_packet()
 {
     if (sendto(settings.fd, buffer, buffer_size + 1, 0,
                (struct sockaddr *)&(settings.server_address), sizeof(settings.server_address)) == -1)
