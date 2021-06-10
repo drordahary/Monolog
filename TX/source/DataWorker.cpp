@@ -1,6 +1,7 @@
 #include "../include/DataWorker.h"
 
-DataWorker::DataWorker(channel_configurations configurations)
+DataWorker::DataWorker(channel_configurations configurations, unsigned int port)
+    : Transmitter(configurations.destination_ip, port, configurations.buffer_size)
 {
     this->configurations = configurations;
 }
@@ -22,6 +23,10 @@ void DataWorker::start_transmitting(const std::string &file_path)
     {
         amount_to_read = calculate_amount_to_read(size, completed);
         data = file.read_file(amount_to_read);
+
+        organize_data(data);
+        transmitt_packet();
+
         completed += amount_to_read;
     }
 }
@@ -34,4 +39,9 @@ int DataWorker::calculate_amount_to_read(const int &size, const int &completed)
     }
 
     return size - completed;
+}
+
+void DataWorker::organize_data(const std::string &data)
+{
+    strncpy(buffer, data.c_str(), buffer_size);
 }

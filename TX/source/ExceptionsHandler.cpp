@@ -19,3 +19,8 @@ std::string ExceptionsHandler::bad_stream_open()
 {
     return "Cannot open stream";
 }
+
+std::string ExceptionsHandler::bad_socket_open()
+{
+    return "Cannot open socket";
+}

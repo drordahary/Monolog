@@ -13,7 +13,7 @@ public:
     DataWorkerPool(int &amount_of_workers);
     ~DataWorkerPool();
 
-    void set_workers(int &amount_of_workers, channel_configurations configurations);
+    void set_workers(const std::vector<unsigned int> &ports, channel_configurations configurations);
 
     void start_working(std::string &data, DataWorker *worker);
     void add_job(std::string &data);

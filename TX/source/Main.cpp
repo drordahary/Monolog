@@ -43,6 +43,7 @@ int main()
             slog_warn("Cannot set signal handler");
         }
 
+        start_up.set_ports();
         start_up.set_groups();
         start_up.initiate_transmitters();
 

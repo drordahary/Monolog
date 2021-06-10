@@ -8,11 +8,11 @@ DataWorkerPool::~DataWorkerPool()
 {
 }
 
-void DataWorkerPool::set_workers(int &amount_of_workers, channel_configurations configurations)
-{   
-    for (int i = 0; i < amount_of_workers; i++)
+void DataWorkerPool::set_workers(const std::vector<unsigned int> &ports, channel_configurations configurations)
+{
+    for (int i = 0; i < ports.size(); i++)
     {
-        data_workers.insert({new DataWorker(configurations), false});
+        data_workers.insert({new DataWorker(configurations, ports.at(i)), false});
     }
 }
 

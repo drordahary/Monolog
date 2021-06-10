@@ -9,4 +9,5 @@ public:
     static std::string bad_redis_reply();
     static std::string bad_file_move();
     static std::string bad_stream_open();
+    static std::string bad_socket_open();
 };

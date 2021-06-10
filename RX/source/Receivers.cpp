@@ -5,6 +5,8 @@ Receivers::Receivers(channel_configurations configurations)
     this->configurations = configurations;
     FD_ZERO(&sockets);
     max_fd = -1;
+    buffer_size = configurations.buffer_size;
+    buffer = new char[this->configurations.buffer_size + 1];
 }
 
 Receivers::~Receivers()
@@ -19,6 +21,7 @@ Receivers::~Receivers()
     FD_ZERO(&sockets);
     FD_ZERO(&copy);
 
+    delete[] buffer;
     data_sockets.clear();
 }
 
@@ -111,6 +114,8 @@ void Receivers::start_receiving()
             }
             return;
         }
+
+        handle_readables();
     }
 }
 
@@ -119,7 +124,7 @@ void Receivers::handle_readables()
     if (FD_ISSET(metadata_socket.fd, &copy))
     {
         handle_metadata();
-        std::fill(buffer.begin(), buffer.end(), '\0');
+        std::fill(buffer, buffer + buffer_size + 1, '\0');
     }
 
     for (int i = 0; i < data_sockets.size(); i++)
@@ -127,27 +132,30 @@ void Receivers::handle_readables()
         if (FD_ISSET(data_sockets[i].fd, &copy))
         {
             handle_data(data_sockets[i]);
+            std::fill(buffer, buffer + buffer_size + 1, '\0');
         }
     }
 }
 
 void Receivers::handle_metadata()
 {
-    metadata_socket.receive_len = recvfrom(metadata_socket.fd, &buffer[0], buffer_size, 0,
+    metadata_socket.receive_len = recvfrom(metadata_socket.fd, buffer, buffer_size + 1, 0,
                                            (struct sockaddr *)&metadata_socket.client_address, &metadata_socket.socket_len);
 
     if (metadata_socket.receive_len > 0)
     {
+        slog_trace("Metadata: %s", buffer);
     }
 }
 
 void Receivers::handle_data(socket_settings &data_socket)
 {
-    data_socket.receive_len = recvfrom(data_socket.fd, &buffer[0], buffer_size, 0,
+    data_socket.receive_len = recvfrom(data_socket.fd, buffer, buffer_size, 0,
                                        (struct sockaddr *)&data_socket.client_address, &data_socket.socket_len);
 
     if (data_socket.receive_len > 0)
     {
+        slog_trace("Data: %s", buffer);
     }
 }
 

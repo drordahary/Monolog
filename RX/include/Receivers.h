@@ -23,7 +23,7 @@ private:
     int max_fd;
 
     int buffer_size;
-    std::vector<unsigned char> buffer;
+    char *buffer;
 
     fd_set sockets;
     fd_set copy;
@@ -38,7 +38,7 @@ private:
 public:
     Receivers(channel_configurations configurations);
     ~Receivers();
-    
+
     void set_pools(DataWorkerPool *data_pool, MetadataWorkerPool *metadata_pool);
     void set_sockets(const int &metadata_port, const std::vector<int> &data_ports);
     socket_settings set_single_socket(const int &port);

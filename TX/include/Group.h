@@ -20,9 +20,9 @@ public:
     Group(channel_configurations configurations, int channel_id);
     ~Group();
 
-    void set_all_workers();
-    void set_metadata_worker();
-    void set_data_pool();
+    void set_all_workers(const unsigned int &metadata_port, const std::vector<unsigned int> &data_ports);
+    void set_metadata_worker(const unsigned int &port);
+    void set_data_pool(const std::vector<unsigned int> &ports);
     void start_transmitting();
     void terminate_pool();
 };

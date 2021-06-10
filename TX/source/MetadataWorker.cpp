@@ -1,9 +1,11 @@
 #include "../include/MetadataWorker.h"
 
-MetadataWorker::MetadataWorker(channel_configurations configurations, int channel_id)
+MetadataWorker::MetadataWorker(channel_configurations configurations, int channel_id, unsigned int port)
+    : Transmitter(configurations.destination_ip, port, configurations.buffer_size)
 {
     this->configurations = configurations;
     this->channel_id = channel_id;
+    file_id = 0;
     redis_handler.connect_to_redis();
     redis_handler.select_database(REDIS_TX_DB);
 }
@@ -41,7 +43,6 @@ void MetadataWorker::start_working()
 
 void MetadataWorker::handle_paths()
 {
-    int file_id = 0;
     int file_size;
     std::string new_path = STAGING_DIR;
     std::string move_to;
@@ -58,15 +59,18 @@ void MetadataWorker::handle_paths()
             file_size = get_file_size(*fixed_paths_it);
             save_metadata_to_redis(file_id, path, file_size);
 
+            organize_metadata(path, file_size);
+            transmitt_packet();
+
             move_to = new_path;
             FileHandler::move_file(*fixed_paths_it, move_to);
 
             data_pool->add_job(move_to);
+            file_id++;
         }
 
         new_path = STAGING_DIR;
         fixed_paths_it++;
-        file_id++;
     }
 }
 
@@ -86,4 +90,13 @@ void MetadataWorker::save_metadata_to_redis(int &file_id, std::string &path, int
     field.second = path + ":" + std::to_string(file_size);
 
     redis_handler.save_metadata(key, field);
+}
+
+void MetadataWorker::organize_metadata(const std::string &path, const int &file_size)
+{
+    std::string metadata = std::to_string(channel_id) + "," +
+                           std::to_string(file_id) + "," +
+                           path + "," + std::to_string(file_size);
+
+    strncpy(buffer, metadata.c_str(), buffer_size);
 }
