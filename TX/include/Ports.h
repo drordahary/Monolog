@@ -10,18 +10,14 @@ class Ports
 {
 private:
     RedisHandler redis_handler;
-    std::vector<channel_configurations> channels_configurations;
-
+    std::map<int, channel_configurations> channels_configurations;
     std::map<unsigned int, std::vector<unsigned int>> ports;
-    int channels_count;
-    int offset_port;
 
 public:
     Ports();
     ~Ports();
 
-    void set_configurations(const std::vector<channel_configurations> &channels_configurations);
-    void set_offset_port(const int &offset_port);
+    void set_configurations(const std::map<int, channel_configurations> &channels_configurations);
 
     void set_all_ports();
     void set_metadata_ports();

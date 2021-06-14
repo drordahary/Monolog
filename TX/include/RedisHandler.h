@@ -22,8 +22,9 @@ public:
     void connect_to_redis();
     void select_database(const int &database_id);
 
-    int get_channels_count();
+    std::vector<int> get_channels_ids();
     std::string get_configuration(const int &channel_id, const std::string &field);
 
     void save_metadata(std::string &key, std::pair<std::string, std::string> &field);
+    bool key_hash_exists(const std::string &key);
 };

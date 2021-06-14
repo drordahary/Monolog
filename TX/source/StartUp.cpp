@@ -21,22 +21,21 @@ void StartUp::set_infrastructure()
 
 void StartUp::set_groups()
 {
-    std::vector<channel_configurations> channels_configurations;
+    std::map<int, channel_configurations> channels_configurations;
     channels_configurations = settings.get_channels_configurations();
-    int channel_id = 0;
+    int channel_id;
 
-    for (channel_configurations configurations : channels_configurations)
+    for (auto const &configurations : channels_configurations)
     {
-        groups.push_back(GroupFactory::make_group(configurations, channel_id));
+        channel_id = configurations.first;
+        groups.push_back(GroupFactory::make_group(configurations.second, channel_id));
         groups.back()->set_all_workers(ports.get_metadata_port(channel_id), ports.get_data_ports(channel_id));
-        channel_id++;
     }
 }
 
 void StartUp::set_ports()
 {
     ports.set_configurations(settings.get_channels_configurations());
-    ports.set_offset_port(settings.get_channels_configurations()[0].port_offset);
     ports.set_all_ports();
 }
 

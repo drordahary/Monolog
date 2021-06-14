@@ -21,7 +21,7 @@ class Settings
 {
 private:
     RedisHandler redis_handler;
-    std::vector<channel_configurations> channels;
+    std::map<int, channel_configurations> channels;
 
 public:
     Settings();
@@ -30,7 +30,7 @@ public:
     void set_logger();
     void set_redis();
     void fetch_configurations();
-    void organize_results(const std::vector<std::string> &results);
+    void organize_results(const std::vector<std::string> &results, const int &id);
 
-    std::vector<channel_configurations> &get_channels_configurations();
+    std::map<int, channel_configurations> &get_channels_configurations();
 };

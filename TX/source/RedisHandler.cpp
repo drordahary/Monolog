@@ -32,20 +32,26 @@ void RedisHandler::select_database(const int &database_id)
     freeReplyObject(reply);
 }
 
-int RedisHandler::get_channels_count()
+std::vector<int> RedisHandler::get_channels_ids()
 {
-    query = "get channelsCount";
+    query = "lrange channelsIDs 0 -1";
     reply = (redisReply *)redisCommand(context, query.c_str());
 
-    if (!reply || context->err || reply->type != REDIS_REPLY_STRING)
+    if (!reply || context->err || reply->type == REDIS_REPLY_ERROR)
     {
         throw(ExceptionsHandler::bad_redis_reply());
     }
 
-    int count = atoi(reply->str);
+    std::vector<int> ids;
+
+    for (int i = 0; i < reply->elements; i++)
+    {
+        ids.push_back(atoi(reply->element[i]->str));
+    }
+
     freeReplyObject(reply);
 
-    return count;
+    return ids;
 }
 
 std::string RedisHandler::get_configuration(const int &channel_id, const std::string &field)
@@ -77,4 +83,22 @@ void RedisHandler::save_metadata(std::string &key, std::pair<std::string, std::s
     }
 
     freeReplyObject(reply);
+}
+
+bool RedisHandler::key_hash_exists(const std::string &key)
+{
+    query = "hmget " + key + " srcIP";
+    reply = (redisReply *)redisCommand(context, query.c_str());
+
+    if (reply->type == REDIS_REPLY_ERROR)
+    {
+        throw(ExceptionsHandler::bad_redis_reply());
+    }
+
+    if (reply == NULL)
+    {
+        return false;
+    }
+
+    return true;
 }

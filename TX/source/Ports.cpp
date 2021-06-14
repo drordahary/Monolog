@@ -4,7 +4,6 @@ Ports::Ports()
 {
     redis_handler.connect_to_redis();
     redis_handler.select_database(REDIS_DB_ID);
-    channels_count = redis_handler.get_channels_count();
 }
 
 Ports::~Ports()
@@ -12,14 +11,9 @@ Ports::~Ports()
     ports.clear();
 }
 
-void Ports::set_configurations(const std::vector<channel_configurations> &channels_configurations)
+void Ports::set_configurations(const std::map<int, channel_configurations> &channels_configurations)
 {
     this->channels_configurations = channels_configurations;
-}
-
-void Ports::set_offset_port(const int &offset_port)
-{
-    this->offset_port = offset_port;
 }
 
 void Ports::set_all_ports()
@@ -30,34 +24,39 @@ void Ports::set_all_ports()
 
 void Ports::set_metadata_ports()
 {
-    for (int i = 0; i < channels_count; i++)
+    int counter = 0;
+    int port_offset;
+
+    for (auto const &configuration : channels_configurations)
     {
-        ports.insert({i + offset_port + 1, std::vector<unsigned int>()});
-        ports[i + offset_port + 1].resize(channels_configurations[i].ports_per_channel);
+        port_offset = configuration.second.port_offset;
+        ports.insert({port_offset, std::vector<unsigned int>()});
     }
 }
 
 void Ports::set_data_ports()
 {
-    int multiplier = channels_count / MAX_PORTS_PER_CHANNEL + 1;
+    int port_offset;
+    int ports_per_channel;
 
-    for (int i = 0; i < channels_count; i++)
+    for (auto const &configuration : channels_configurations)
     {
-        for (int j = 0; j < ports[i + offset_port + 1].size(); j++)
-        {
-            ports[i + offset_port + 1][j] = (offset_port + (multiplier * MAX_PORTS_PER_CHANNEL) + j);
-        }
+        port_offset = configuration.second.port_offset;
+        ports_per_channel = configuration.second.ports_per_channel;
 
-        multiplier++;
+        for (int i = port_offset; i < port_offset + ports_per_channel; i++)
+        {
+            ports[port_offset].push_back(i + 1);
+        }
     }
 }
 
 unsigned int Ports::get_metadata_port(const int &channel_id)
 {
-    return offset_port + channel_id;
+    return channels_configurations[channel_id].port_offset;
 }
 
 std::vector<unsigned int> &Ports::get_data_ports(const int &channel_id)
 {
-    return ports[channel_id + offset_port + 1];
+    return ports[channels_configurations[channel_id].port_offset];
 }
