@@ -14,6 +14,16 @@ MetadataWorker::~MetadataWorker()
 {
 }
 
+void MetadataWorker::set_file_id()
+{
+    std::string key = "channelID:" + std::to_string(channel_id);
+
+    if (redis_handler.key_hash_exists(key))
+    {
+        file_id = redis_handler.get_last_file_id(key);
+    }
+}
+
 void MetadataWorker::enable_pool_usage(DataWorkerPool *data_pool)
 {
     this->data_pool = data_pool;
@@ -21,6 +31,7 @@ void MetadataWorker::enable_pool_usage(DataWorkerPool *data_pool)
 
 void MetadataWorker::start_working()
 {
+    set_file_id();
     std::string absolute_path = configurations.channel_directory;
 
     while (!exiting)

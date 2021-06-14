@@ -72,6 +72,13 @@ std::string RedisHandler::get_configuration(const int &channel_id, const std::st
 
 void RedisHandler::save_metadata(std::string &key, std::pair<std::string, std::string> &field)
 {
+    std::string channel_key = "channelID:" + key;
+
+    if (!key_hash_exists(channel_key))
+    {
+        handle_new_channel_hash(channel_key);
+    }
+
     query = "hmset channelID:" + key;
     query += " fileID:" + field.first + " " + field.second;
 
@@ -83,11 +90,12 @@ void RedisHandler::save_metadata(std::string &key, std::pair<std::string, std::s
     }
 
     freeReplyObject(reply);
+    increment_file_id(channel_key);
 }
 
 bool RedisHandler::key_hash_exists(const std::string &key)
 {
-    query = "hmget " + key + " srcIP";
+    query = "hgetall " + key;
     reply = (redisReply *)redisCommand(context, query.c_str());
 
     if (reply->type == REDIS_REPLY_ERROR)
@@ -95,10 +103,57 @@ bool RedisHandler::key_hash_exists(const std::string &key)
         throw(ExceptionsHandler::bad_redis_reply());
     }
 
-    if (reply == NULL)
+    if (reply->type == REDIS_REPLY_ARRAY && reply->elements == 0)
     {
+        freeReplyObject(reply);
         return false;
     }
 
+    freeReplyObject(reply);
     return true;
+}
+
+int RedisHandler::get_last_file_id(const std::string &key)
+{
+    query = "hmget " + key + " lastFileID";
+    reply = (redisReply *)redisCommand(context, query.c_str());
+
+    if (!reply || context->err)
+    {
+        throw(ExceptionsHandler::bad_redis_reply());
+    }
+
+    int file_id = atoi(reply->element[0]->str);
+
+    freeReplyObject(reply);
+    return file_id;
+}
+
+void RedisHandler::handle_new_channel_hash(const std::string &key)
+{
+    query = "hmset " + key;
+    query += " lastFileID 0";
+
+    reply = (redisReply *)redisCommand(context, query.c_str());
+
+    if (reply == NULL || reply->type == REDIS_REPLY_ERROR)
+    {
+        throw(ExceptionsHandler::bad_redis_reply());
+    }
+
+    freeReplyObject(reply);
+}
+
+void RedisHandler::increment_file_id(const std::string &key)
+{
+    query = "hincrby " + key + " lastFileID 1";
+
+    reply = (redisReply *)redisCommand(context, query.c_str());
+
+    if (reply == NULL || reply->type == REDIS_REPLY_ERROR)
+    {
+        throw(ExceptionsHandler::bad_redis_reply());
+    }
+
+    freeReplyObject(reply);
 }

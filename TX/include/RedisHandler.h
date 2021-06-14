@@ -27,4 +27,8 @@ public:
 
     void save_metadata(std::string &key, std::pair<std::string, std::string> &field);
     bool key_hash_exists(const std::string &key);
+    int get_last_file_id(const std::string &key);
+    void handle_new_channel_hash(const std::string &key);
+
+    void increment_file_id(const std::string &key);
 };

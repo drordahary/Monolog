@@ -25,6 +25,8 @@ public:
     MetadataWorker(channel_configurations configurations, int channel_id, unsigned int port);
     ~MetadataWorker();
 
+    void set_file_id();
+
     void enable_pool_usage(DataWorkerPool *data_pool);
     void start_working();
 
