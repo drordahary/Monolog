@@ -25,4 +25,6 @@ public:
     std::vector<int> get_channels_ids();
     int get_channels_count();
     std::string get_configuration(const int &channel_id, const std::string &field);
+
+    void save_metadata(std::string &key, std::pair<std::string, std::string> &field);
 };

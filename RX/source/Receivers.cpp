@@ -144,7 +144,7 @@ void Receivers::handle_metadata()
 
     if (metadata_socket.receive_len > 0)
     {
-        slog_trace("Metadata: %s", buffer);
+        metadata_pool->add_job(std::string(buffer));
     }
 }
 

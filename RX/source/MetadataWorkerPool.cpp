@@ -18,12 +18,13 @@ void MetadataWorkerPool::set_workers(const int &amount_of_workers)
     slog_info("Opened metadata worker pool");
 }
 
-void MetadataWorkerPool::start_working(std::string &data, MetadataWorker *worker)
+void MetadataWorkerPool::start_working(std::string data, MetadataWorker *worker)
 {
+    worker->start_working(data);
     metadata_workers.at(worker) = false;
 }
 
-void MetadataWorkerPool::add_job(std::string &data)
+void MetadataWorkerPool::add_job(std::string data)
 {
     MetadataWorker *worker = get_first_available_worker();
     boost::asio::post(thread_pool, std::bind(&MetadataWorkerPool::start_working, this, data, worker));

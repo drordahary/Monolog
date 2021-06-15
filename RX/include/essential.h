@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string.h>
 #include <vector>
+#include <sstream>
 #include <map>
 #include <signal.h>
 #include <sys/types.h>
@@ -20,5 +21,7 @@
 #include <slog.h>
 #include <hiredis/hiredis.h>
 #include "ExceptionsHandler.h"
+
+#define REDIS_RX_DB 1
 
 extern bool exiting;
