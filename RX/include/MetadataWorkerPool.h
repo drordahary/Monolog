@@ -7,11 +7,10 @@ class MetadataWorkerPool
 {
 private:
     std::map<MetadataWorker *, bool> metadata_workers;
-    boost::asio::io_service io_service;
-    boost::thread_group thread_pool;
+    boost::asio::thread_pool thread_pool;
 
 public:
-    MetadataWorkerPool();
+    MetadataWorkerPool(const int &amount_of_workers);
     ~MetadataWorkerPool();
 
     void set_workers(const int &amount_of_workers);

@@ -30,10 +30,10 @@ void StartUp::set_ports()
 
 void StartUp::set_pools()
 {
-    data_pool = new DataWorkerPool();
+    data_pool = new DataWorkerPool(pool_settings::data_pool_size);
     data_pool->set_workers(pool_settings::data_pool_size);
 
-    metadata_pool = new MetadataWorkerPool();
+    metadata_pool = new MetadataWorkerPool(pool_settings::metadata_pool_size);
     metadata_pool->set_workers(pool_settings::metadata_pool_size);
 }
 

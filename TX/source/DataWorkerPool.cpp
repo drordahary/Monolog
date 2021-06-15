@@ -48,7 +48,6 @@ DataWorker *DataWorkerPool::get_first_available_worker()
 void DataWorkerPool::terminate_pool()
 {
     thread_pool.join();
-
     delete_workers();
 }
 

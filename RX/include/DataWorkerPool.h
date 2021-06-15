@@ -7,11 +7,10 @@ class DataWorkerPool
 {
 private:
     std::map<DataWorker *, bool> data_workers;
-    boost::asio::io_service io_service;
-    boost::thread_group thread_pool;
+    boost::asio::thread_pool thread_pool;
 
 public:
-    DataWorkerPool();
+    DataWorkerPool(const int &amount_of_workers);
     ~DataWorkerPool();
 
     void set_workers(const int &amount_of_workers);
