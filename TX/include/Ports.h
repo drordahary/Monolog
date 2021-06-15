@@ -4,8 +4,6 @@
 #include "RedisHandler.h"
 #include "Settings.h"
 
-#define MAX_PORTS_PER_CHANNEL 10
-
 class Ports
 {
 private:
