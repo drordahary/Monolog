@@ -4,29 +4,23 @@
 #include "RedisHandler.h"
 #include "Settings.h"
 
-#define MAX_PORTS_PER_CHANNEL 10
-
 class Ports
 {
 private:
     RedisHandler redis_handler;
-    std::vector<channel_configurations> channels_configurations;
-
-    std::map<int, std::vector<int>> ports;
-    int channels_count;
-    int offset_port;
+    std::map<int, channel_configurations> channels_configurations;
+    std::map<unsigned int, std::vector<unsigned int>> ports;
 
 public:
     Ports();
     ~Ports();
 
-    void set_configurations(const std::vector<channel_configurations> &channels_configurations);
-    void set_offset_port(const int &offset_port);
+    void set_configurations(const std::map<int, channel_configurations> &channels_configurations);
 
     void set_all_ports();
     void set_metadata_ports();
     void set_data_ports();
 
-    int get_metadata_port(const int &channel_id);
-    std::vector<int> &get_data_ports(const int &channel_id);
+    unsigned int get_metadata_port(const int &channel_id);
+    std::vector<unsigned int> &get_data_ports(const int &channel_id);
 };

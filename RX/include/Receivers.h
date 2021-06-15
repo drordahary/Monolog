@@ -40,10 +40,10 @@ public:
     ~Receivers();
 
     void set_pools(DataWorkerPool *data_pool, MetadataWorkerPool *metadata_pool);
-    void set_sockets(const int &metadata_port, const std::vector<int> &data_ports);
+    void set_sockets(const int &metadata_port, const std::vector<unsigned int> &data_ports);
     socket_settings set_single_socket(const int &port);
     void set_metadata_socket(const int &metadata_port);
-    void set_data_sockets(const std::vector<int> &data_ports);
+    void set_data_sockets(const std::vector<unsigned int> &data_ports);
 
     void start_receiving();
     void handle_readables();

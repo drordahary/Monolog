@@ -40,7 +40,7 @@ void Settings::set_redis()
 
 void Settings::fetch_configurations()
 {
-    int channels_count = redis_handler.get_channels_count();
+    std::vector<int> channels_ids = redis_handler.get_channels_ids();
     std::string configuration;
 
     std::vector<std::string> results;
@@ -55,23 +55,26 @@ void Settings::fetch_configurations()
             "timesToSend",
             "bufferSize"};
 
-    for (int i = 0; i < channels_count; i++)
+    int counter = 0;
+
+    for (auto &id : channels_ids)
     {
         for (int j = 0; j < fields.size(); j++)
         {
-            configuration = redis_handler.get_configuration(i, fields.at(j));
+            configuration = redis_handler.get_configuration(id, fields.at(j));
             results.push_back(configuration);
         }
 
         all_channels_results.push_back(results);
         results.clear();
-        organize_results(all_channels_results.at(i));
+        organize_results(all_channels_results.at(counter), id);
+        counter++;
     }
 
     slog_info("Fetched all the results from Redis");
 }
 
-void Settings::organize_results(const std::vector<std::string> &results)
+void Settings::organize_results(const std::vector<std::string> &results, const int &id)
 {
     channel_configurations configurations;
 
@@ -83,10 +86,10 @@ void Settings::organize_results(const std::vector<std::string> &results)
     configurations.times_to_send = std::stoi(results[5]);
     configurations.buffer_size = std::stoi(results[6]);
 
-    channels.push_back(configurations);
+    channels.insert(std::pair<int, channel_configurations>(id, configurations));
 }
 
-std::vector<channel_configurations> &Settings::get_channels_configurations()
+std::map<int, channel_configurations> &Settings::get_channels_configurations()
 {
     return channels;
 }

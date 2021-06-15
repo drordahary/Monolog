@@ -32,6 +32,28 @@ void RedisHandler::select_database(const int &database_id)
     freeReplyObject(reply);
 }
 
+std::vector<int> RedisHandler::get_channels_ids()
+{
+    query = "lrange channelsIDs 0 -1";
+    reply = (redisReply *)redisCommand(context, query.c_str());
+
+    if (!reply || context->err || reply->type == REDIS_REPLY_ERROR)
+    {
+        throw(ExceptionsHandler::bad_redis_reply());
+    }
+
+    std::vector<int> ids;
+
+    for (int i = 0; i < reply->elements; i++)
+    {
+        ids.push_back(atoi(reply->element[i]->str));
+    }
+
+    freeReplyObject(reply);
+
+    return ids;
+}
+
 int RedisHandler::get_channels_count()
 {
     query = "get channelsCount";

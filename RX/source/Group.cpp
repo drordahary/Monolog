@@ -11,7 +11,7 @@ Group::~Group()
     delete receivers_thread;
 }
 
-void Group::set_receivers(const int &metadata_port, const std::vector<int> &data_ports)
+void Group::set_receivers(const int &metadata_port, const std::vector<unsigned int> &data_ports)
 {
     receivers.set_pipe();
     receivers.set_sockets(metadata_port, data_ports);

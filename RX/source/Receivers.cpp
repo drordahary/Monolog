@@ -31,7 +31,7 @@ void Receivers::set_pools(DataWorkerPool *data_pool, MetadataWorkerPool *metadat
     this->metadata_pool = metadata_pool;
 }
 
-void Receivers::set_sockets(const int &metadata_port, const std::vector<int> &data_ports)
+void Receivers::set_sockets(const int &metadata_port, const std::vector<unsigned int> &data_ports)
 {
     set_metadata_socket(metadata_port);
     set_data_sockets(data_ports);
@@ -78,7 +78,7 @@ void Receivers::set_metadata_socket(const int &metadata_port)
     }
 }
 
-void Receivers::set_data_sockets(const std::vector<int> &data_ports)
+void Receivers::set_data_sockets(const std::vector<unsigned int> &data_ports)
 {
     for (const int &port : data_ports)
     {

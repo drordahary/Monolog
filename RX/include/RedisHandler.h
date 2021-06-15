@@ -21,6 +21,8 @@ public:
 
     void connect_to_redis();
     void select_database(const int &database_id);
+
+    std::vector<int> get_channels_ids();
     int get_channels_count();
     std::string get_configuration(const int &channel_id, const std::string &field);
 };
