@@ -3,6 +3,8 @@
 #include <iostream>
 #include <dirent.h>
 #include <string.h>
+#include <sstream>
+#include <iomanip>
 #include <vector>
 #include <map>
 #include <boost/asio/io_service.hpp>

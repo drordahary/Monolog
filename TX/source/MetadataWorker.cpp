@@ -76,7 +76,7 @@ void MetadataWorker::handle_paths()
             move_to = new_path;
             FileHandler::move_file(*fixed_paths_it, move_to);
 
-            data_pool->add_job(move_to);
+            data_pool->add_job(move_to, file_id, channel_id);
             file_id++;
         }
 

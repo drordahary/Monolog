@@ -20,10 +20,11 @@ void DataWorkerPool::set_workers(const int &amount_of_workers)
 
 void DataWorkerPool::start_working(std::string &data, DataWorker *worker)
 {
+    worker->start_working(data);
     data_workers.at(worker) = false;
 }
 
-void DataWorkerPool::add_job(std::string &data)
+void DataWorkerPool::add_job(std::string data)
 {
     DataWorker *worker = get_first_available_worker();
     boost::asio::post(thread_pool, std::bind(&DataWorkerPool::start_working, this, data, worker));

@@ -16,7 +16,7 @@ public:
     void set_workers(const int &amount_of_workers);
 
     void start_working(std::string &data, DataWorker *worker);
-    void add_job(std::string &data);
+    void add_job(std::string data);
     DataWorker *get_first_available_worker();
 
     void terminate_pool();

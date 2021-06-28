@@ -16,16 +16,16 @@ void DataWorkerPool::set_workers(const std::vector<unsigned int> &ports, channel
     }
 }
 
-void DataWorkerPool::start_working(std::string &data, DataWorker *worker)
+void DataWorkerPool::start_working(std::string &data, int &file_id, int &channel_id, DataWorker *worker)
 {
-    worker->start_transmitting(data);
+    worker->start_transmitting(data, file_id, channel_id);
     data_workers.at(worker) = false;
 }
 
-void DataWorkerPool::add_job(std::string &data)
+void DataWorkerPool::add_job(std::string &data, int &file_id, int &channel_id)
 {
     DataWorker *worker = get_first_available_worker();
-    boost::asio::post(thread_pool, std::bind(&DataWorkerPool::start_working, this, data, worker));
+    boost::asio::post(thread_pool, std::bind(&DataWorkerPool::start_working, this, data, file_id, channel_id, worker));
 }
 
 DataWorker *DataWorkerPool::get_first_available_worker()

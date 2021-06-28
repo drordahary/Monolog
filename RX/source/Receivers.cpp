@@ -155,7 +155,7 @@ void Receivers::handle_data(socket_settings &data_socket)
 
     if (data_socket.receive_len > 0)
     {
-        slog_trace("Data: %s", buffer);
+        data_pool->add_job(std::string(buffer));
     }
 }
 
