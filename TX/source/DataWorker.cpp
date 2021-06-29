@@ -31,7 +31,7 @@ void DataWorker::start_transmitting(const std::string &file_path, int &file_id, 
         completed += amount_to_read;
     }
 
-    //file.close_file();
+    file.close_file();
     move_to_archive(file_path);
     serializer.reset_packet_id();
 }
