@@ -43,6 +43,7 @@ void FileStream::close_file()
     if (file != NULL)
     {
         fclose(file);
+        file = NULL;
     }
 }
 

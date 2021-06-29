@@ -31,6 +31,8 @@ void DataWorker::start_transmitting(const std::string &file_path, int &file_id, 
         completed += amount_to_read;
     }
 
+    //file.close_file();
+    move_to_archive(file_path);
     serializer.reset_packet_id();
 }
 
@@ -47,4 +49,13 @@ int DataWorker::calculate_amount_to_read(const int &size, const int &completed)
 void DataWorker::organize_data(const std::string &data)
 {
     strncpy(buffer, data.c_str(), buffer_size);
+}
+
+void DataWorker::move_to_archive(const std::string &path)
+{
+    int relative_channel_index = nth_occurrence(path, "/", 2) + 1;
+    std::string move_to = std::string(ARCHIVE_DIR) + path.substr(relative_channel_index);
+
+    DirectoryOrganizer::produce_structure(move_to);
+    FileHandler::move_file(path, move_to);
 }

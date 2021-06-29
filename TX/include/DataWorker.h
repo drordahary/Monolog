@@ -22,4 +22,5 @@ public:
     void start_transmitting(const std::string &file_path, int &file_id, int &channel_id);
     int calculate_amount_to_read(const int &size, const int &completed);
     void organize_data(const std::string &data);
+    void move_to_archive(const std::string &path);
 };
