@@ -16,6 +16,7 @@ void Deserializer::deserialize_packet(std::string &data)
     channel_id = hex_to_int(data.substr(0, HEX_LENGTH));
     file_id = hex_to_int(data.substr(HEX_LENGTH, HEX_LENGTH));
     packet_id = hex_to_int(data.substr(HEX_LENGTH * 2, HEX_LENGTH));
+    raw_data = data.substr(HEX_LENGTH * 3);
 }
 
 int Deserializer::hex_to_int(std::string hexadecimal)
@@ -36,4 +37,9 @@ int Deserializer::get_file_id()
 int Deserializer::get_channel_id()
 {
     return channel_id;
+}
+
+std::string &Deserializer::get_raw_data()
+{
+    return raw_data;
 }

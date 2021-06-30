@@ -100,3 +100,23 @@ void RedisHandler::save_metadata(std::string &key, std::pair<std::string, std::s
 
     freeReplyObject(reply);
 }
+
+bool RedisHandler::file_exists(const int &channel_id, const int &file_id)
+{
+    query = "hexists channelID" + std::to_string(channel_id);
+    query += " fileID:" + std::to_string(file_id);
+
+    reply = (redisReply *)redisCommand(context, query.c_str());
+
+    if (!reply || context->err || reply->type == REDIS_REPLY_ERROR)
+    {
+        throw(ExceptionsHandler::bad_redis_reply());
+    }
+
+    if (reply->integer == 1)
+    {
+        return true;
+    }
+
+    return false;
+}

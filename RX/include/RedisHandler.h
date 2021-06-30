@@ -27,4 +27,6 @@ public:
     std::string get_configuration(const int &channel_id, const std::string &field);
 
     void save_metadata(std::string &key, std::pair<std::string, std::string> &field);
+
+    bool file_exists(const int &channel_id, const int &file_id);
 };

@@ -11,6 +11,7 @@ private:
     int packet_id;
     int file_id;
     int channel_id;
+    std::string raw_data;
 
 public:
     Deserializer();
@@ -22,4 +23,5 @@ public:
     int get_packet_id();
     int get_file_id();
     int get_channel_id();
+    std::string &get_raw_data();
 };
