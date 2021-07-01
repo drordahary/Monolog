@@ -2,6 +2,7 @@
 
 FileStream::FileStream()
 {
+    file = NULL;
 }
 
 FileStream::~FileStream()
