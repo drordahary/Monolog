@@ -7,6 +7,7 @@ Receivers::Receivers(channel_configurations configurations)
     max_fd = -1;
     buffer_size = configurations.buffer_size;
     buffer = new char[this->configurations.buffer_size + 1];
+    std::fill(buffer, buffer + buffer_size + 1, '\0');
 }
 
 Receivers::~Receivers()
@@ -54,6 +55,8 @@ socket_settings Receivers::set_single_socket(const int &port)
     single_socket.server_address.sin_family = AF_INET;
     single_socket.server_address.sin_addr.s_addr = INADDR_ANY;
     single_socket.server_address.sin_port = htons(port);
+
+    single_socket.socket_len = 0;
 
     int bind_result = bind(single_socket.fd, (const struct sockaddr *)&single_socket.server_address,
                            sizeof(single_socket.server_address));
@@ -150,7 +153,7 @@ void Receivers::handle_metadata()
 
 void Receivers::handle_data(socket_settings &data_socket)
 {
-    data_socket.receive_len = recvfrom(data_socket.fd, buffer, buffer_size, 0,
+    data_socket.receive_len = recvfrom(data_socket.fd, buffer, buffer_size + 1, 0,
                                        (struct sockaddr *)&data_socket.client_address, &data_socket.socket_len);
 
     if (data_socket.receive_len > 0)
