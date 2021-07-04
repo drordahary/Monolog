@@ -18,16 +18,16 @@ void DataWorkerPool::set_workers(const int &amount_of_workers)
     slog_info("Opened data worker pool");
 }
 
-void DataWorkerPool::start_working(std::string &data, DataWorker *worker)
+void DataWorkerPool::start_working(std::string &data, DataWorker *worker, int &buffer_size)
 {
-    worker->start_working(data);
+    worker->start_working(data, buffer_size);
     data_workers.at(worker) = false;
 }
 
-void DataWorkerPool::add_job(std::string data)
+void DataWorkerPool::add_job(std::string data, int &buffer_size)
 {
     DataWorker *worker = get_first_available_worker();
-    boost::asio::post(thread_pool, std::bind(&DataWorkerPool::start_working, this, data, worker));
+    boost::asio::post(thread_pool, std::bind(&DataWorkerPool::start_working, this, data, worker, buffer_size));
 }
 
 DataWorker *DataWorkerPool::get_first_available_worker()

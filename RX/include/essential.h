@@ -24,4 +24,7 @@
 
 #define REDIS_RX_DB 1
 
+#define FILES_DIR "../files/"
+#define UNTRACKED_DIR "../untracked"
+
 extern bool exiting;

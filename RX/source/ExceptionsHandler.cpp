@@ -29,3 +29,8 @@ std::string ExceptionsHandler::bad_pipe()
 {
     return "Pipe failed";
 }
+
+std::string ExceptionsHandler::bad_stream_open()
+{
+    return "Cannot open stream";
+}

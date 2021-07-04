@@ -5,7 +5,7 @@
 class FileStream
 {
 private:
-    FILE* file;
+    FILE *file;
     int size;
     std::vector<unsigned char> buffer;
 

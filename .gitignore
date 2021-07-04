@@ -4,3 +4,5 @@ RX/bin/
 RX/logs/
 TX/staging/
 TX/archive/
+RX/files/
+RX/untracked/

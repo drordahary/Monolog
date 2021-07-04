@@ -5,6 +5,7 @@ Receivers::Receivers(channel_configurations configurations)
     this->configurations = configurations;
     FD_ZERO(&sockets);
     max_fd = -1;
+
     buffer_size = configurations.buffer_size;
     buffer = new char[this->configurations.buffer_size + 1];
     std::fill(buffer, buffer + buffer_size + 1, '\0');
@@ -158,7 +159,7 @@ void Receivers::handle_data(socket_settings &data_socket)
 
     if (data_socket.receive_len > 0)
     {
-        data_pool->add_job(std::string(buffer));
+        data_pool->add_job(std::string(buffer), buffer_size);
     }
 }
 

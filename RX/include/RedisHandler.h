@@ -29,4 +29,6 @@ public:
     void save_metadata(std::string &key, std::pair<std::string, std::string> &field);
 
     bool file_exists(const int &channel_id, const int &file_id);
+    std::string get_file_path(const int &channel_id, const int &file_id);
+    int get_file_size(const int &channel_id, const int &file_id);
 };

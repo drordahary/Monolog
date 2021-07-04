@@ -11,4 +11,5 @@ public:
     static std::string bad_bind();
     static std::string bad_select();
     static std::string bad_pipe();
+    static std::string bad_stream_open();
 };

@@ -50,7 +50,6 @@ std::vector<int> RedisHandler::get_channels_ids()
     }
 
     freeReplyObject(reply);
-
     return ids;
 }
 
@@ -103,7 +102,7 @@ void RedisHandler::save_metadata(std::string &key, std::pair<std::string, std::s
 
 bool RedisHandler::file_exists(const int &channel_id, const int &file_id)
 {
-    query = "hexists channelID" + std::to_string(channel_id);
+    query = "hexists channelID:" + std::to_string(channel_id);
     query += " fileID:" + std::to_string(file_id);
 
     reply = (redisReply *)redisCommand(context, query.c_str());
@@ -113,10 +112,51 @@ bool RedisHandler::file_exists(const int &channel_id, const int &file_id)
         throw(ExceptionsHandler::bad_redis_reply());
     }
 
+    slog_trace("INTEGER: %d", reply->integer);
     if (reply->integer == 1)
     {
+        freeReplyObject(reply);
         return true;
     }
 
+    freeReplyObject(reply);
     return false;
+}
+
+std::string RedisHandler::get_file_path(const int &channel_id, const int &file_id)
+{
+    query = "hmget channelID:" + std::to_string(channel_id);
+    query += " fileID:" + std::to_string(file_id);
+
+    reply = (redisReply *)redisCommand(context, query.c_str());
+
+    if (!reply || context->err || reply->type == REDIS_REPLY_ERROR)
+    {
+        throw(ExceptionsHandler::bad_redis_reply());
+    }
+
+    std::string metadata = reply->element[0]->str;
+    std::string path = metadata.substr(0, metadata.find(':'));
+
+    freeReplyObject(reply);
+    return path;
+}
+
+int RedisHandler::get_file_size(const int &channel_id, const int &file_id)
+{
+    query = "hmget channelID:" + std::to_string(channel_id);
+    query += " fileID:" + std::to_string(file_id);
+
+    reply = (redisReply *)redisCommand(context, query.c_str());
+
+    if (!reply || context->err || reply->type == REDIS_REPLY_ERROR)
+    {
+        throw(ExceptionsHandler::bad_redis_reply());
+    }
+
+    std::string metadata = reply->element[0]->str;
+    int file_size = std::stoi(metadata.substr(metadata.find(':') + 1));
+
+    freeReplyObject(reply);
+    return file_size;
 }
