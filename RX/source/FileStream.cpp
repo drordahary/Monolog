@@ -13,9 +13,15 @@ FileStream::~FileStream()
     }
 }
 
+void FileStream::create_file(const std::string &path)
+{
+    file = fopen(path.c_str(), "ab");
+    close_file();
+}
+
 void FileStream::set_file(const std::string &path)
 {
-    file = fopen(path.c_str(), "wb");
+    file = fopen(path.c_str(), "rb+");
 
     if (file == NULL)
     {

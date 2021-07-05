@@ -35,12 +35,15 @@ void DataWorker::inspect_packet_case()
 void DataWorker::handle_packet()
 {
     std::string path = std::string(FILES_DIR) + redis_handler.get_file_path(channel_id, file_id);
-    slog_trace("%s", path.c_str());
     int file_size = redis_handler.get_file_size(channel_id, file_id);
-
     int offset = calculate_file_offset(file_size);
 
+    FileMonitor::add_file_id(channel_id, file_id);
+    DirectoryOrganizer::produce_structure(path);
+
+    stream.create_file(path);
     stream.set_file(path);
+
     stream.write_to_file(raw_data, offset);
     stream.close_file();
 }
@@ -54,6 +57,5 @@ int DataWorker::calculate_file_offset(const int &file_size)
         offset = file_size - (offset - file_size);
     }
 
-    slog_trace("%d,%d,%d: OFFSET: %d", channel_id, file_id, packet_id, offset);
     return offset;
 }

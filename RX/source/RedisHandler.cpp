@@ -112,7 +112,6 @@ bool RedisHandler::file_exists(const int &channel_id, const int &file_id)
         throw(ExceptionsHandler::bad_redis_reply());
     }
 
-    slog_trace("INTEGER: %d", reply->integer);
     if (reply->integer == 1)
     {
         freeReplyObject(reply);

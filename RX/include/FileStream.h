@@ -11,6 +11,7 @@ public:
     FileStream();
     ~FileStream();
 
+    void create_file(const std::string &path);
     void set_file(const std::string &path);
     void write_to_file(const std::string &data, const int &offset);
 

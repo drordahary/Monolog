@@ -21,6 +21,8 @@
 #include <slog.h>
 #include <hiredis/hiredis.h>
 #include "ExceptionsHandler.h"
+#include "DirectoryOrganizer.h"
+#include "FileMonitor.h"
 
 #define REDIS_RX_DB 1
 
