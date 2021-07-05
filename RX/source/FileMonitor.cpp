@@ -19,7 +19,6 @@ bool FileMonitor::file_id_exists(const int &channel_id, const int &file_id)
         std::vector<int> copy = search->second;
 
         if (std::find(copy.begin(), copy.end(), file_id) != copy.end())
-            ;
         {
             return true;
         }
