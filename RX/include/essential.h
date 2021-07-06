@@ -22,11 +22,10 @@
 #include <hiredis/hiredis.h>
 #include "ExceptionsHandler.h"
 #include "DirectoryOrganizer.h"
-#include "FileMonitor.h"
 
 #define REDIS_RX_DB 1
 
 #define FILES_DIR "../files/"
-#define UNTRACKED_DIR "../untracked"
+#define UNTRACKED_DIR "../untracked/"
 
 extern bool exiting;

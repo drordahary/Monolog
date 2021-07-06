@@ -27,5 +27,6 @@ public:
     void start_working(std::string &data, int &buffer_size);
     void inspect_packet_case();
     void handle_packet();
+    void construct_untracked_file();
     int calculate_file_offset(const int &file_size);
 };

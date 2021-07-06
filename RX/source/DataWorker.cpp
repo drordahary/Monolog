@@ -30,6 +30,11 @@ void DataWorker::inspect_packet_case()
     {
         handle_packet();
     }
+
+    else
+    {
+        construct_untracked_file();
+    }
 }
 
 void DataWorker::handle_packet()
@@ -38,14 +43,30 @@ void DataWorker::handle_packet()
     int file_size = redis_handler.get_file_size(channel_id, file_id);
     int offset = calculate_file_offset(file_size);
 
-    FileMonitor::add_file_id(channel_id, file_id);
     DirectoryOrganizer::produce_structure(path);
 
     stream.create_file(path);
+    stream.close_file();
     stream.set_file(path);
 
     stream.write_to_file(raw_data, offset);
     stream.close_file();
+}
+
+void DataWorker::construct_untracked_file()
+{
+    FileStream untracked_stream;
+
+    std::string file_name = std::to_string(channel_id) + std::to_string(file_id);
+    untracked_stream.create_file(std::string(UNTRACKED_DIR) + file_name);
+
+    std::string packet_metadata = std::to_string(packet_id) + "," + std::to_string(raw_data.length()) + "\n";
+
+    untracked_stream.append_to_file(packet_metadata);
+    untracked_stream.append_to_file(raw_data);
+    untracked_stream.append_to_file("\n");
+
+    untracked_stream.close_file();
 }
 
 int DataWorker::calculate_file_offset(const int &file_size)
