@@ -28,5 +28,6 @@ public:
     void inspect_packet_case();
     void handle_packet();
     void construct_untracked_file();
-    int calculate_file_offset(const int &file_size);
 };
+
+int calculate_file_offset(const int &file_size, const int &packet_id, const int &buffer_size);

@@ -52,6 +52,17 @@ void StartUp::set_groups()
     }
 }
 
+void StartUp::set_untracked_workers()
+{
+    std::map<int, channel_configurations> channels_configurations;
+    channels_configurations = settings.get_channels_configurations();
+
+    for (auto &configurations : channels_configurations)
+    {
+        //untracked_workers.create_thread(boost::bind())
+    }
+}
+
 void StartUp::terminate_now()
 {
     for (Group *group : groups)

@@ -11,6 +11,7 @@
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <unistd.h>
+#include <stdint.h>
 #include <sys/select.h>
 #include <thread>
 #include <boost/asio/io_service.hpp>
@@ -20,6 +21,7 @@
 #include <boost/asio/post.hpp>
 #include <slog.h>
 #include <hiredis/hiredis.h>
+#include <hiredis/adapters/libevent.h>
 #include "ExceptionsHandler.h"
 #include "DirectoryOrganizer.h"
 

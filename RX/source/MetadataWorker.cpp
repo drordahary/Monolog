@@ -41,6 +41,11 @@ void MetadataWorker::save_metadata_to_redis()
     field.first = std::to_string(current_metadata.file_id);
     field.second = current_metadata.path + ":" +
                    std::to_string(current_metadata.file_size);
-    
+
     redis_handler.save_metadata(key, field);
+}
+
+bool MetadataWorker::untracked_file_exists(const std::string &path)
+{
+    return access(path.c_str(), F_OK) == 0;
 }

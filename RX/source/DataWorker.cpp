@@ -41,7 +41,7 @@ void DataWorker::handle_packet()
 {
     std::string path = std::string(FILES_DIR) + redis_handler.get_file_path(channel_id, file_id);
     int file_size = redis_handler.get_file_size(channel_id, file_id);
-    int offset = calculate_file_offset(file_size);
+    int offset = calculate_file_offset(file_size, packet_id, buffer_size);
 
     DirectoryOrganizer::produce_structure(path);
 
@@ -69,7 +69,7 @@ void DataWorker::construct_untracked_file()
     untracked_stream.close_file();
 }
 
-int DataWorker::calculate_file_offset(const int &file_size)
+int calculate_file_offset(const int &file_size, const int &packet_id, const int &buffer_size)
 {
     int offset = packet_id * (buffer_size - OVERHEAD_SIZE);
 

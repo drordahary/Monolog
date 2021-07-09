@@ -25,4 +25,6 @@ public:
     void start_working(std::string data);
     void organize_metadata(std::string &metadata);
     void save_metadata_to_redis();
+
+    bool untracked_file_exists(const std::string &path);
 };

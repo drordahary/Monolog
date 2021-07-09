@@ -22,6 +22,7 @@ private:
     Ports ports;
     DataWorkerPool *data_pool;
     MetadataWorkerPool *metadata_pool;
+    boost::thread_group untracked_workers;
 
 public:
     StartUp();
@@ -31,6 +32,7 @@ public:
     void set_ports();
     void set_pools();
     void set_groups();
+    void set_untracked_workers();
 
     void terminate_now();
 };
