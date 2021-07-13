@@ -56,10 +56,6 @@ void StartUp::set_groups()
     }
 }
 
-void StartUp::set_untracked_workers()
-{
-}
-
 void StartUp::terminate_now()
 {
     for (Group *group : groups)
