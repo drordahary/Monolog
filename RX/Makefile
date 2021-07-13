@@ -3,7 +3,7 @@ all:
 	mkdir -p logs
 	mkdir -p files
 	mkdir -p untracked
-	/usr/bin/g++ source/*.cpp -o bin/RX -lslog -pthread -lhiredis -lboost_system -lboost_thread
+	/usr/bin/g++ source/*.cpp -o bin/RX -lslog -pthread -lhiredis -levent -lboost_system -lboost_thread
 
 clean:
 	$(RM) -r bin/RX

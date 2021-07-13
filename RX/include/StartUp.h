@@ -7,11 +7,13 @@
 #include "Ports.h"
 #include "DataWorkerPool.h"
 #include "MetadataWorkerPool.h"
+#include "UntrackedWorkerPool.h"
 
 namespace pool_settings
 {
     const int data_pool_size = 20;
     const int metadata_pool_size = 5;
+    const int untracked_pool_size = 5;
 }
 
 class StartUp
@@ -22,7 +24,7 @@ private:
     Ports ports;
     DataWorkerPool *data_pool;
     MetadataWorkerPool *metadata_pool;
-    boost::thread_group untracked_workers;
+    UntrackedWorkerPool *untracked_pool;
 
 public:
     StartUp();

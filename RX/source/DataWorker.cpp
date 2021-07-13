@@ -56,16 +56,15 @@ void DataWorker::handle_packet()
 void DataWorker::construct_untracked_file()
 {
     FileStream untracked_stream;
+    std::string overall_data;
 
     std::string file_name = std::to_string(channel_id) + std::to_string(file_id);
     untracked_stream.create_file(std::string(UNTRACKED_DIR) + file_name);
 
-    std::string packet_metadata = std::to_string(packet_id) + "," + std::to_string(raw_data.length()) + "\n";
+    overall_data = std::to_string(packet_id) + "," + std::to_string(raw_data.length()) + "\n";
+    overall_data += raw_data + "\n";
 
-    untracked_stream.append_to_file(packet_metadata);
-    untracked_stream.append_to_file(raw_data);
-    untracked_stream.append_to_file("\n");
-
+    untracked_stream.append_to_file(overall_data);
     untracked_stream.close_file();
 }
 

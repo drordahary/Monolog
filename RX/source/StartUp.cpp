@@ -13,6 +13,7 @@ StartUp::~StartUp()
 
     delete data_pool;
     delete metadata_pool;
+    delete untracked_pool;
 }
 
 void StartUp::set_infrastructure()
@@ -33,8 +34,11 @@ void StartUp::set_pools()
     data_pool = new DataWorkerPool(pool_settings::data_pool_size);
     data_pool->set_workers(pool_settings::data_pool_size);
 
+    untracked_pool = new UntrackedWorkerPool(pool_settings::untracked_pool_size);
+    untracked_pool->set_workers(pool_settings::untracked_pool_size);
+
     metadata_pool = new MetadataWorkerPool(pool_settings::metadata_pool_size);
-    metadata_pool->set_workers(pool_settings::metadata_pool_size);
+    metadata_pool->set_workers(pool_settings::metadata_pool_size, untracked_pool);
 }
 
 void StartUp::set_groups()
@@ -54,13 +58,6 @@ void StartUp::set_groups()
 
 void StartUp::set_untracked_workers()
 {
-    std::map<int, channel_configurations> channels_configurations;
-    channels_configurations = settings.get_channels_configurations();
-
-    for (auto &configurations : channels_configurations)
-    {
-        //untracked_workers.create_thread(boost::bind())
-    }
 }
 
 void StartUp::terminate_now()
@@ -72,4 +69,5 @@ void StartUp::terminate_now()
 
     data_pool->terminate_pool();
     metadata_pool->terminate_pool();
+    untracked_pool->terminate_pool();
 }

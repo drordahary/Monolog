@@ -1,7 +1,9 @@
 #include "../include/MetadataWorker.h"
 
-MetadataWorker::MetadataWorker()
+MetadataWorker::MetadataWorker(UntrackedWorkerPool *untracked_pool)
 {
+    this->untracked_pool = untracked_pool;
+
     redis_handler.connect_to_redis();
     redis_handler.select_database(REDIS_RX_DB);
 }
@@ -10,10 +12,28 @@ MetadataWorker::~MetadataWorker()
 {
 }
 
-void MetadataWorker::start_working(std::string data)
+void MetadataWorker::start_working(std::string data, const int &buffer_size)
 {
     organize_metadata(data);
     save_metadata_to_redis();
+
+    std::string file_path = std::string(FILES_DIR) + current_metadata.path;
+    std::string untracked_file_path = std::string(UNTRACKED_DIR);
+    untracked_file_path += std::to_string(current_metadata.channel_id);
+    untracked_file_path += std::to_string(current_metadata.file_id);
+
+    if (untracked_file_exists(untracked_file_path))
+    {
+        slog_trace("exists");
+        std::string untracked_data = std::to_string(current_metadata.channel_id) + ",";
+        untracked_data += std::to_string(current_metadata.file_id) + ",";
+        untracked_data += std::to_string(current_metadata.file_size) + ",";
+        untracked_data += std::to_string(buffer_size) + ",";
+        untracked_data += file_path;
+
+        DirectoryOrganizer::produce_structure(file_path);
+        untracked_pool->add_job(untracked_data);
+    }
 }
 
 void MetadataWorker::organize_metadata(std::string &metadata)

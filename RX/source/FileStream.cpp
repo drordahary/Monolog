@@ -1,5 +1,7 @@
 #include "../include/FileStream.h"
 
+std::mutex FileStream::m_lock;
+
 FileStream::FileStream()
 {
     file = NULL;
@@ -33,6 +35,12 @@ void FileStream::set_file(const std::string &path)
     }
 }
 
+void FileStream::set_read_buffer(const int &buffer_size)
+{
+    buffer.resize(buffer_size);
+    std::fill(buffer.begin(), buffer.end(), '\0');
+}
+
 void FileStream::write_to_file(const std::string &data, const int &offset)
 {
     lseek(fileno(file), offset, SEEK_SET);
@@ -42,14 +50,29 @@ void FileStream::write_to_file(const std::string &data, const int &offset)
 
 void FileStream::append_to_file(const std::string &data)
 {
+    std::lock_guard<std::mutex> lock(m_lock);
     fwrite(data.c_str(), 1, data.length(), file);
     fflush(file);
 }
 
-void FileStream::read_file(std::string &data, const int &offset, const int &amount)
+std::string FileStream::read_file(const int &amount)
 {
-    lseek(fileno(file), offset, SEEK_SET);
-    fread(&data[0], 1, amount, file);
+    std::lock_guard<std::mutex> lock(m_lock);
+
+    fread(reinterpret_cast<char *>(&buffer[0]), amount, 1, file);
+    std::string data(buffer.begin(), buffer.end());
+
+    std::fill(buffer.begin(), buffer.end(), '\0');
+    return data;
+}
+
+int FileStream::get_size()
+{
+    fseek(file, 0, SEEK_END);
+    int size = ftell(file);
+    fseek(file, 0, SEEK_SET);
+
+    return size;
 }
 
 void FileStream::close_file()

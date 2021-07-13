@@ -148,7 +148,7 @@ void Receivers::handle_metadata()
 
     if (metadata_socket.receive_len > 0)
     {
-        metadata_pool->add_job(std::string(buffer));
+        metadata_pool->add_job(std::string(buffer), buffer_size);
     }
 }
 

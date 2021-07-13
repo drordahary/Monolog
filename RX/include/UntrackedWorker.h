@@ -6,6 +6,7 @@
 
 typedef struct untracked_file
 {
+    int channel_id;
     int file_id;
     int file_size;
     int buffer_size;
@@ -16,18 +17,13 @@ typedef struct untracked_file
 class UntrackedWorker
 {
 private:
-    int channel_id;
-    struct event_base *base;
-    redisAsyncContext *context;
+    untracked_file file;
 
 public:
-    UntrackedWorker(int channel_id);
+    UntrackedWorker();
     ~UntrackedWorker();
 
-    void start_redis_async_connect();
-    void subscribe_to_channel();
+    void start_working(std::string &data);
+    void organize_data(std::string &data);
+    void restore_file();
 };
-
-void handle_publishment(redisAsyncContext *ac, void *reply, void *privdata);
-untracked_file organize_data(std::string &data);
-void restore_file(untracked_file &file, const int &channel_id);

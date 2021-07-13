@@ -8,26 +8,26 @@ MetadataWorkerPool::~MetadataWorkerPool()
 {
 }
 
-void MetadataWorkerPool::set_workers(const int &amount_of_workers)
+void MetadataWorkerPool::set_workers(const int &amount_of_workers, UntrackedWorkerPool *untracked_pool)
 {
     for (int i = 0; i < amount_of_workers; i++)
     {
-        metadata_workers.insert({new MetadataWorker(), false});
+        metadata_workers.insert({new MetadataWorker(untracked_pool), false});
     }
 
     slog_info("Opened metadata worker pool");
 }
 
-void MetadataWorkerPool::start_working(std::string data, MetadataWorker *worker)
+void MetadataWorkerPool::start_working(std::string data, MetadataWorker *worker, int buffer_size)
 {
-    worker->start_working(data);
+    worker->start_working(data, buffer_size);
     metadata_workers.at(worker) = false;
 }
 
-void MetadataWorkerPool::add_job(std::string data)
+void MetadataWorkerPool::add_job(std::string data, int buffer_size)
 {
     MetadataWorker *worker = get_first_available_worker();
-    boost::asio::post(thread_pool, std::bind(&MetadataWorkerPool::start_working, this, data, worker));
+    boost::asio::post(thread_pool, std::bind(&MetadataWorkerPool::start_working, this, data, worker, buffer_size));
 }
 
 MetadataWorker *MetadataWorkerPool::get_first_available_worker()
