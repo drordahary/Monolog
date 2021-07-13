@@ -47,7 +47,6 @@ void UntrackedWorker::restore_file()
     to_stream.close_file();
     to_stream.set_file(file.path);
 
-    int offset = 0;
     int amount_to_read = 0;
     int from_file_size = from_stream.get_size();
 
@@ -68,8 +67,6 @@ void UntrackedWorker::restore_file()
         packet_id = std::stoi(metadata.substr(0, metadata.find(",")));
         amount_to_read = std::stoi(metadata.substr(metadata.find(",") + 1)) + 1;
 
-        offset += bytes_read;
-
         from_stream.set_read_buffer(amount_to_read);
         data = from_stream.read_file(amount_to_read);
         if (data.length() > 0)
@@ -77,7 +74,6 @@ void UntrackedWorker::restore_file()
             data.pop_back();
         }
 
-        offset += amount_to_read;
         to_stream.write_to_file(data, calculate_file_offset(file.file_size, packet_id, file.buffer_size));
     }
 
