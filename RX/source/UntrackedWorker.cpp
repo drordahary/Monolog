@@ -30,9 +30,6 @@ void UntrackedWorker::organize_data(std::string &data)
     file.file_size = std::stoi(result[2]);
     file.buffer_size = std::stoi(result[3]);
     file.path = result[4];
-
-    slog_trace("%d %d %d %d", file.channel_id, file.file_id, file.file_size, file.buffer_size);
-    slog_trace("PATH: %s", file.path.c_str());
 }
 
 void UntrackedWorker::restore_file()
