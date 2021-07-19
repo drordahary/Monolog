@@ -14,6 +14,10 @@ StartUp::~StartUp()
     delete data_pool;
     delete metadata_pool;
     delete untracked_pool;
+
+    ntp_thread->join();
+    delete ntp_thread;
+    delete time_worker;
 }
 
 void StartUp::set_infrastructure()
@@ -56,6 +60,21 @@ void StartUp::set_groups()
     }
 }
 
+void StartUp::set_ntp()
+{
+    RedisHandler redis_handler;
+    redis_handler.connect_to_redis();
+    redis_handler.select_database(REDIS_DB_ID);
+
+    int port = redis_handler.get_ntp_port();
+    time_worker = new TimeWorker(port);
+
+    time_worker->set_pipe();
+    time_worker->set_socket(port);
+    
+    ntp_thread = new boost::thread(boost::bind(&TimeWorker::start_receiving, time_worker));
+}
+
 void StartUp::terminate_now()
 {
     for (Group *group : groups)
@@ -66,4 +85,6 @@ void StartUp::terminate_now()
     data_pool->terminate_pool();
     metadata_pool->terminate_pool();
     untracked_pool->terminate_pool();
+
+    time_worker->self_pipe();
 }

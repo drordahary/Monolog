@@ -8,6 +8,7 @@
 #include "DataWorkerPool.h"
 #include "MetadataWorkerPool.h"
 #include "UntrackedWorkerPool.h"
+#include "TimeWorker.h"
 
 namespace pool_settings
 {
@@ -26,6 +27,9 @@ private:
     MetadataWorkerPool *metadata_pool;
     UntrackedWorkerPool *untracked_pool;
 
+    TimeWorker *time_worker;
+    boost::thread *ntp_thread;
+
 public:
     StartUp();
     ~StartUp();
@@ -34,6 +38,7 @@ public:
     void set_ports();
     void set_pools();
     void set_groups();
+    void set_ntp();
 
     void terminate_now();
 };

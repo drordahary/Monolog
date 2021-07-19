@@ -40,6 +40,7 @@ int main()
         start_up.set_ports();
         start_up.set_pools();
         start_up.set_groups();
+        start_up.set_ntp();
 
         while (!exiting)
         {

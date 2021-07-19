@@ -31,4 +31,6 @@ public:
     bool file_exists(const int &channel_id, const int &file_id);
     std::string get_file_path(const int &channel_id, const int &file_id);
     int get_file_size(const int &channel_id, const int &file_id);
+
+    int get_ntp_port();
 };

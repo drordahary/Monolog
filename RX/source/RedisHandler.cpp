@@ -159,3 +159,21 @@ int RedisHandler::get_file_size(const int &channel_id, const int &file_id)
     freeReplyObject(reply);
     return file_size;
 }
+
+int RedisHandler::get_ntp_port()
+{
+    query = "get ntpSocketPort";
+
+    reply = (redisReply *)redisCommand(context, query.c_str());
+
+    if (reply == NULL || reply->type == REDIS_REPLY_ERROR)
+    {
+        throw(ExceptionsHandler::bad_redis_reply());
+    }
+
+    int ntp_socket_port = atoi(reply->str);
+
+    freeReplyObject(reply);
+    slog_trace("PORT IS: %d", ntp_socket_port);
+    return ntp_socket_port;
+}
