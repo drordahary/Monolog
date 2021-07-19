@@ -31,4 +31,7 @@ public:
     void handle_new_channel_hash(const std::string &key);
 
     void increment_file_id(const std::string &key);
+
+    std::string get_ntp_ip();
+    int get_ntp_port();
 };

@@ -5,6 +5,7 @@
 #include "Group.h"
 #include "GroupFactory.h"
 #include "Ports.h"
+#include "TimeWorker.h"
 
 class StartUp
 {
@@ -12,6 +13,10 @@ private:
     Settings settings;
     Ports ports;
     std::vector<Group *> groups;
+
+    RedisHandler redis_handler;
+    TimeWorker *time_worker;
+    boost::thread *ntp_thread;
 
 public:
     StartUp();

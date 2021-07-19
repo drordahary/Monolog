@@ -157,3 +157,37 @@ void RedisHandler::increment_file_id(const std::string &key)
 
     freeReplyObject(reply);
 }
+
+std::string RedisHandler::get_ntp_ip()
+{
+    query = "get ntpSocketIP";
+
+    reply = (redisReply *)redisCommand(context, query.c_str());
+
+    if (reply == NULL || reply->type == REDIS_REPLY_ERROR)
+    {
+        throw(ExceptionsHandler::bad_redis_reply());
+    }
+
+    std::string ntp_socket_ip = reply->str;
+
+    freeReplyObject(reply);
+    return ntp_socket_ip;
+}
+
+int RedisHandler::get_ntp_port()
+{
+    query = "get ntpSocketPort";
+
+    reply = (redisReply *)redisCommand(context, query.c_str());
+
+    if (reply == NULL || reply->type == REDIS_REPLY_ERROR)
+    {
+        throw(ExceptionsHandler::bad_redis_reply());
+    }
+
+    int ntp_socket_port = atoi(reply->str);
+
+    freeReplyObject(reply);
+    return ntp_socket_port;
+}

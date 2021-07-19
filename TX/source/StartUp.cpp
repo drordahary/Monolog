@@ -2,6 +2,8 @@
 
 StartUp::StartUp()
 {
+    redis_handler.connect_to_redis();
+    redis_handler.select_database(REDIS_DB_ID);
 }
 
 StartUp::~StartUp()
@@ -10,6 +12,10 @@ StartUp::~StartUp()
     {
         delete group;
     }
+
+    ntp_thread->join();
+    delete ntp_thread;
+    delete time_worker;
 }
 
 void StartUp::set_infrastructure()
@@ -45,6 +51,9 @@ void StartUp::initiate_transmitters()
     {
         group->start_transmitting();
     }
+
+    time_worker = new TimeWorker(redis_handler.get_ntp_ip(), redis_handler.get_ntp_port());
+    ntp_thread = new boost::thread(boost::bind(&TimeWorker::start_updating, time_worker));
 }
 
 void StartUp::terminate_now()
