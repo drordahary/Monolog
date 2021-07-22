@@ -90,7 +90,6 @@ void TimeWorker::handle_readable()
             current_time = buffer;
             system_command = "sudo date +%s -s @" + current_time;
             system(system_command.c_str());
-            slog_trace("Updated time to: %s", current_time.c_str());
         }
     }
 }

@@ -174,6 +174,5 @@ int RedisHandler::get_ntp_port()
     int ntp_socket_port = atoi(reply->str);
 
     freeReplyObject(reply);
-    slog_trace("PORT IS: %d", ntp_socket_port);
     return ntp_socket_port;
 }

@@ -24,7 +24,6 @@ void MetadataWorker::start_working(std::string data, const int &buffer_size)
 
     if (untracked_file_exists(untracked_file_path))
     {
-        slog_trace("exists");
         std::string untracked_data = std::to_string(current_metadata.channel_id) + ",";
         untracked_data += std::to_string(current_metadata.file_id) + ",";
         untracked_data += std::to_string(current_metadata.file_size) + ",";
