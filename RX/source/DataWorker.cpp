@@ -2,6 +2,9 @@
 
 DataWorker::DataWorker()
 {
+    channel_id = 0;
+    file_id = 0;
+    packet_id = 0;
     buffer_size = 0;
     redis_handler.connect_to_redis();
     redis_handler.select_database(REDIS_RX_DB);
@@ -11,7 +14,7 @@ DataWorker::~DataWorker()
 {
 }
 
-void DataWorker::start_working(std::string &data, int &buffer_size)
+void DataWorker::start_working(std::string &data, const int &buffer_size)
 {
     this->buffer_size = buffer_size;
     deserializer.deserialize_packet(data);

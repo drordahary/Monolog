@@ -5,7 +5,7 @@
 class DirectoryOrganizer
 {
 public:
-    static void produce_structure(std::string &path);
+    static void produce_structure(const std::string &path);
     static std::string extract_directory_structure(std::string path);
     static void make_directories(std::string path, int count);
 };

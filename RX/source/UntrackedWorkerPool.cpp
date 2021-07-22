@@ -12,7 +12,7 @@ void UntrackedWorkerPool::set_workers(const int &amount_of_workers)
 {
     for (int i = 0; i < amount_of_workers; i++)
     {
-        metadata_workers.insert({new UntrackedWorker(), false});
+        untracked_workers.insert({new UntrackedWorker(), false});
     }
 
     slog_info("Opened untracked worker pool");
@@ -21,7 +21,7 @@ void UntrackedWorkerPool::set_workers(const int &amount_of_workers)
 void UntrackedWorkerPool::start_working(std::string data, UntrackedWorker *worker)
 {
     worker->start_working(data);
-    metadata_workers.at(worker) = false;
+    untracked_workers.at(worker) = false;
 }
 
 void UntrackedWorkerPool::add_job(std::string data)
@@ -34,17 +34,21 @@ UntrackedWorker *UntrackedWorkerPool::get_first_available_worker()
 {
     while (true)
     {
-        for (auto &worker : metadata_workers)
+        auto result = std::find_if(untracked_workers.begin(), untracked_workers.end(), is_worker_available);
+
+        if (result != untracked_workers.end())
         {
-            if (!worker.second)
-            {
-                worker.second = true;
-                return worker.first;
-            }
+            result->second = true;
+            return result->first;
         }
 
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
+}
+
+bool UntrackedWorkerPool::is_worker_available(std::pair<UntrackedWorker *, bool> worker)
+{
+    return !worker.second;
 }
 
 void UntrackedWorkerPool::terminate_pool()
@@ -55,10 +59,10 @@ void UntrackedWorkerPool::terminate_pool()
 
 void UntrackedWorkerPool::delete_workers()
 {
-    for (auto &worker : metadata_workers)
+    for (auto &worker : untracked_workers)
     {
         delete worker.first;
     }
 
-    metadata_workers.clear();
+    untracked_workers.clear();
 }

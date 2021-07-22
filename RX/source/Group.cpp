@@ -1,7 +1,8 @@
 #include "../include/Group.h"
 
-Group::Group(channel_configurations configurations, int channel_id) : receivers(configurations)
+Group::Group(const channel_configurations &configurations, int channel_id) : receivers(configurations)
 {
+    receivers_thread = nullptr;
     this->channel_id = channel_id;
 }
 

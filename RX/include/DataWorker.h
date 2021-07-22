@@ -24,7 +24,7 @@ public:
     DataWorker();
     ~DataWorker();
 
-    void start_working(std::string &data, int &buffer_size);
+    void start_working(std::string &data, const int &buffer_size);
     void inspect_packet_case();
     void handle_packet();
     void construct_untracked_file();

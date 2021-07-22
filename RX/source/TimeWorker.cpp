@@ -1,6 +1,6 @@
 #include "../include/TimeWorker.h"
 
-TimeWorker::TimeWorker(unsigned int port)
+TimeWorker::TimeWorker(unsigned int port) : settings{}, pfd{}
 {
     max_fd = -1;
     FD_ZERO(&sockets);
@@ -52,12 +52,10 @@ void TimeWorker::set_socket(unsigned int port)
 
 void TimeWorker::start_receiving()
 {
-    int readable_count = 0;
-
     while (!exiting)
     {
         copy = sockets;
-        readable_count = select(max_fd + 1, &copy, nullptr, nullptr, nullptr);
+        int readable_count = select(max_fd + 1, &copy, nullptr, nullptr, nullptr);
 
         if (FD_ISSET(pfd[0], &copy))
         {

@@ -1,6 +1,6 @@
 #include "../include/DirectoryOrganizer.h"
 
-void DirectoryOrganizer::produce_structure(std::string &path)
+void DirectoryOrganizer::produce_structure(const std::string &path)
 {
     std::string new_path = extract_directory_structure(path);
     make_directories(new_path, 1);

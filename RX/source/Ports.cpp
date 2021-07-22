@@ -24,25 +24,19 @@ void Ports::set_all_ports()
 
 void Ports::set_metadata_ports()
 {
-    int counter = 0;
-    int port_offset;
-
     for (auto const &configuration : channels_configurations)
     {
-        port_offset = configuration.second.port_offset;
+        int port_offset = configuration.second.port_offset;
         ports.insert({port_offset, std::vector<unsigned int>()});
     }
 }
 
 void Ports::set_data_ports()
 {
-    int port_offset;
-    int ports_per_channel;
-
     for (auto const &configuration : channels_configurations)
     {
-        port_offset = configuration.second.port_offset;
-        ports_per_channel = configuration.second.ports_per_channel;
+        int port_offset = configuration.second.port_offset;
+        int ports_per_channel = configuration.second.ports_per_channel;
 
         for (int i = port_offset; i < port_offset + ports_per_channel; i++)
         {

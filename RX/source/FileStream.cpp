@@ -22,11 +22,21 @@ FILE *FileStream::get_file()
 
 void FileStream::create_file(const std::string &path)
 {
+    if (file != NULL)
+    {
+        close_file();
+    }
+
     file = fopen(path.c_str(), "ab");
 }
 
 void FileStream::set_file(const std::string &path)
 {
+    if (file != NULL)
+    {
+        close_file();
+    }
+    
     file = fopen(path.c_str(), "rb+");
 
     if (file == NULL)

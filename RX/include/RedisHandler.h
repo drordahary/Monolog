@@ -23,10 +23,9 @@ public:
     void select_database(const int &database_id);
 
     std::vector<int> get_channels_ids();
-    int get_channels_count();
     std::string get_configuration(const int &channel_id, const std::string &field);
 
-    void save_metadata(std::string &key, std::pair<std::string, std::string> &field);
+    void save_metadata(const std::string &key, const std::pair<std::string, std::string> &field);
 
     bool file_exists(const int &channel_id, const int &file_id);
     std::string get_file_path(const int &channel_id, const int &file_id);

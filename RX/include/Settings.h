@@ -27,7 +27,7 @@ public:
     Settings();
     ~Settings();
 
-    void set_logger();
+    static void set_logger();
     void set_redis();
     void fetch_configurations();
     void organize_results(const std::vector<std::string> &results, const int &id);

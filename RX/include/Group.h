@@ -13,7 +13,7 @@ private:
     boost::thread *receivers_thread;
 
 public:
-    Group(channel_configurations configurations, int channel_id);
+    Group(const channel_configurations &configurations, int channel_id);
     ~Group();
 
     void set_receivers(const int &metadata_port, const std::vector<unsigned int> &data_ports);

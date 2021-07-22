@@ -2,6 +2,8 @@
 
 RedisHandler::RedisHandler()
 {
+    context = nullptr;
+    reply = nullptr;
 }
 
 RedisHandler::~RedisHandler()
@@ -53,22 +55,6 @@ std::vector<int> RedisHandler::get_channels_ids()
     return ids;
 }
 
-int RedisHandler::get_channels_count()
-{
-    query = "get channelsCount";
-    reply = (redisReply *)redisCommand(context, query.c_str());
-
-    if (!reply || context->err || reply->type != REDIS_REPLY_STRING)
-    {
-        throw(ExceptionsHandler::bad_redis_reply());
-    }
-
-    int count = atoi(reply->str);
-    freeReplyObject(reply);
-
-    return count;
-}
-
 std::string RedisHandler::get_configuration(const int &channel_id, const std::string &field)
 {
     query = "hmget channelID:" + std::to_string(channel_id) + " " + field;
@@ -85,7 +71,7 @@ std::string RedisHandler::get_configuration(const int &channel_id, const std::st
     return configuration;
 }
 
-void RedisHandler::save_metadata(std::string &key, std::pair<std::string, std::string> &field)
+void RedisHandler::save_metadata(const std::string &key, const std::pair<std::string, std::string> &field)
 {
     query = "hmset channelID:" + key;
     query += " fileID:" + field.first + " " + field.second;

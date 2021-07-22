@@ -1,7 +1,10 @@
 #include "../include/Receivers.h"
 
-Receivers::Receivers(channel_configurations configurations)
+Receivers::Receivers(channel_configurations configurations) : metadata_socket{}, pfd{0}
 {
+    data_pool = nullptr;
+    metadata_pool = nullptr;
+
     this->configurations = configurations;
     FD_ZERO(&sockets);
     max_fd = -1;
@@ -73,7 +76,7 @@ socket_settings Receivers::set_single_socket(const int &port)
 
 void Receivers::set_metadata_socket(const int &metadata_port)
 {
-    metadata_socket = set_single_socket(metadata_port);
+    metadata_socket = Receivers::set_single_socket(metadata_port);
     FD_SET(metadata_socket.fd, &sockets);
 
     if (metadata_socket.fd > max_fd)
@@ -86,7 +89,7 @@ void Receivers::set_data_sockets(const std::vector<unsigned int> &data_ports)
 {
     for (const int &port : data_ports)
     {
-        data_sockets.push_back(set_single_socket(port));
+        data_sockets.push_back(Receivers::set_single_socket(port));
         FD_SET(data_sockets.back().fd, &sockets);
 
         if (data_sockets.back().fd > max_fd)
@@ -98,12 +101,10 @@ void Receivers::set_data_sockets(const std::vector<unsigned int> &data_ports)
 
 void Receivers::start_receiving()
 {
-    int readable_count = 0;
-
     while (!exiting)
     {
         copy = sockets;
-        readable_count = select(max_fd + 1, &copy, nullptr, nullptr, nullptr);
+        int readable_count = select(max_fd + 1, &copy, nullptr, nullptr, nullptr);
 
         if (FD_ISSET(pfd[0], &copy))
         {

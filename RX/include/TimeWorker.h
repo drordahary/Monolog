@@ -19,7 +19,7 @@ private:
     int pfd[2];
 
 public:
-    TimeWorker(unsigned int port);
+    explicit TimeWorker(unsigned int port);
     ~TimeWorker();
 
     void set_socket(unsigned int port);

@@ -2,6 +2,12 @@
 
 StartUp::StartUp()
 {
+    data_pool = nullptr;
+    metadata_pool = nullptr;
+    untracked_pool = nullptr;
+
+    time_worker = nullptr;
+    ntp_thread = nullptr;
 }
 
 StartUp::~StartUp()
@@ -22,7 +28,7 @@ StartUp::~StartUp()
 
 void StartUp::set_infrastructure()
 {
-    settings.set_logger();
+    Settings::set_logger();
     settings.set_redis();
     settings.fetch_configurations();
 }
@@ -49,11 +55,10 @@ void StartUp::set_groups()
 {
     std::map<int, channel_configurations> channels_configurations;
     channels_configurations = settings.get_channels_configurations();
-    int channel_id;
 
     for (auto &configurations : channels_configurations)
     {
-        channel_id = configurations.first;
+        int channel_id = configurations.first;
         groups.push_back(GroupFactory::make_group(configurations.second, channel_id));
         groups.back()->set_pools(data_pool, metadata_pool);
         groups.back()->set_receivers(ports.get_metadata_port(channel_id), ports.get_data_ports(channel_id));

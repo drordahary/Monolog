@@ -34,17 +34,21 @@ MetadataWorker *MetadataWorkerPool::get_first_available_worker()
 {
     while (true)
     {
-        for (auto &worker : metadata_workers)
+        auto result = std::find_if(metadata_workers.begin(), metadata_workers.end(), is_worker_available);
+
+        if (result != metadata_workers.end())
         {
-            if (!worker.second)
-            {
-                worker.second = true;
-                return worker.first;
-            }
+            result->second = true;
+            return result->first;
         }
 
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
+}
+
+bool MetadataWorkerPool::is_worker_available(std::pair<MetadataWorker *, bool> worker)
+{
+    return !worker.second;
 }
 
 void MetadataWorkerPool::terminate_pool()

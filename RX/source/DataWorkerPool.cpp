@@ -18,7 +18,7 @@ void DataWorkerPool::set_workers(const int &amount_of_workers)
     slog_info("Opened data worker pool");
 }
 
-void DataWorkerPool::start_working(std::string &data, DataWorker *worker, int &buffer_size)
+void DataWorkerPool::start_working(std::string &data, DataWorker *worker, const int &buffer_size)
 {
     worker->start_working(data, buffer_size);
     data_workers.at(worker) = false;
@@ -34,17 +34,21 @@ DataWorker *DataWorkerPool::get_first_available_worker()
 {
     while (true)
     {
-        for (auto &worker : data_workers)
+        auto result = std::find_if(data_workers.begin(), data_workers.end(), is_worker_available);
+        
+        if (result != data_workers.end())
         {
-            if (!worker.second)
-            {
-                worker.second = true;
-                return worker.first;
-            }
+            result->second = true;
+            return result->first;
         }
 
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
+}
+
+bool DataWorkerPool::is_worker_available(std::pair<DataWorker *, bool> worker)
+{
+    return !worker.second;
 }
 
 void DataWorkerPool::terminate_pool()

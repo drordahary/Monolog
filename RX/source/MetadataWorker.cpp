@@ -1,6 +1,6 @@
 #include "../include/MetadataWorker.h"
 
-MetadataWorker::MetadataWorker(UntrackedWorkerPool *untracked_pool)
+MetadataWorker::MetadataWorker(UntrackedWorkerPool *untracked_pool) : current_metadata{}
 {
     this->untracked_pool = untracked_pool;
 
@@ -22,7 +22,7 @@ void MetadataWorker::start_working(std::string data, const int &buffer_size)
     untracked_file_path += std::to_string(current_metadata.channel_id);
     untracked_file_path += std::to_string(current_metadata.file_id);
 
-    if (untracked_file_exists(untracked_file_path))
+    if (MetadataWorker::untracked_file_exists(untracked_file_path))
     {
         std::string untracked_data = std::to_string(current_metadata.channel_id) + ",";
         untracked_data += std::to_string(current_metadata.file_id) + ",";

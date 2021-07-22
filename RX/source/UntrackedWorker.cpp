@@ -1,6 +1,6 @@
 #include "../include/UntrackedWorker.h"
 
-UntrackedWorker::UntrackedWorker()
+UntrackedWorker::UntrackedWorker() : file{}
 {
 }
 
@@ -39,34 +39,28 @@ void UntrackedWorker::restore_file()
 
     FileStream from_stream;
     from_stream.create_file(from_path);
-    from_stream.close_file();
     from_stream.set_file(from_path);
 
     FileStream to_stream;
     to_stream.create_file(file.path);
-    to_stream.close_file();
     to_stream.set_file(file.path);
 
     int offset = 0;
-    int amount_to_read = 0;
     int from_file_size = from_stream.get_size();
 
-    int packet_id = -1;
     std::string metadata;
     std::string data;
 
     size_t len = 0;
-    int bytes_read = 0;
     char *line = NULL;
-
 
     while (offset < from_file_size)
     {
-        bytes_read = getline(&line, &len, from_stream.get_file());
+        int bytes_read = getline(&line, &len, from_stream.get_file());
         metadata = line;
 
-        packet_id = std::stoi(metadata.substr(0, metadata.find(",")));
-        amount_to_read = std::stoi(metadata.substr(metadata.find(",") + 1)) + 1;
+        int packet_id = std::stoi(metadata.substr(0, metadata.find(",")));
+        int amount_to_read = std::stoi(metadata.substr(metadata.find(",") + 1)) + 1;
 
         offset += bytes_read;
 

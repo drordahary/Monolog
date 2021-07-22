@@ -18,10 +18,10 @@ public:
     ~Deserializer();
 
     void deserialize_packet(std::string &data);
-    int hex_to_int(std::string hexadecimal);
+    static int hex_to_int(std::string hexadecimal);
 
-    int get_packet_id();
-    int get_file_id();
-    int get_channel_id();
-    std::string &get_raw_data();
+    int get_packet_id() const;
+    int get_file_id() const;
+    int get_channel_id() const;
+    const std::string &get_raw_data() const;
 };
