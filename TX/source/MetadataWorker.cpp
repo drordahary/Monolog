@@ -110,4 +110,5 @@ void MetadataWorker::organize_metadata(const std::string &path, const int &file_
                            path + "," + std::to_string(file_size);
 
     strncpy(buffer, metadata.c_str(), buffer_size);
+    slog_trace("METADATA TO SEND: %s", buffer);
 }
